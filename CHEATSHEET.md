@@ -7,6 +7,48 @@ file. Treat it as a reference, not something to cram.
 Built-in Neovim defaults (not redefined in this config) are marked
 **[builtin]** — see `:help lsp-defaults` for the full list.
 
+## Basics
+
+**Exiting insert mode:** `<Esc>` is standard. `<C-[>` is identical (same
+keycode, closer to home row). The real ninja move is remapping Caps Lock →
+Escape at the OS level (macOS: System Settings → Keyboard → Keyboard
+Shortcuts → Modifier Keys), since Caps Lock is otherwise useless and sits
+right under your pinky. Avoid an insert-mode `jk`/`jj` mapping — it's a
+workaround for skipping that remap, and it taxes normal typing.
+
+**Key notation:** `<C-x>` means hold **Ctrl** and press `x` — a real
+modifier key, pressed simultaneously (same pattern for `<A-x>`/`<M-x>` =
+Alt/Option, `<S-x>` = Shift). `<leader>` is *not* a key — it's a stand-in
+for whatever `mapleader` is set to (here, `<space>`), and leader combos are
+**sequential**, not chorded: `<leader>ff` means tap Space, release, then
+`f`, then `f` — three separate keystrokes. Other common notation from
+`:help`: `<CR>` = Enter, `<BS>` = Backspace, `<Tab>`.
+
+## Motion fundamentals
+
+Core vim motions — no plugin required. Everything after this section is
+config-specific, built on top of these.
+
+| Keys | Action |
+|---|---|
+| `h` / `l` | Left / right one character |
+| `w` / `b` | Jump to start of next/previous word |
+| `e` / `ge` | Jump to end of next/previous word |
+| `0` / `^` / `$` | Start of line / first non-blank char / end of line |
+| `f{char}` / `F{char}` | Jump to next/previous occurrence of `char` on the line |
+| `t{char}` / `T{char}` | Jump to just before/after next/previous occurrence of `char` |
+| `;` / `,` | Repeat the last `f`/`t`/`F`/`T`, same / opposite direction |
+| `{` / `}` | Jump to previous/next blank-line-separated paragraph |
+| `%` | Jump to the matching bracket/brace/paren |
+| `/pattern` / `?pattern` | Search forward / backward, `<CR>` to confirm |
+| `n` / `N` | Repeat last search, same / opposite direction |
+| `*` / `#` | Search forward/backward for the word under the cursor |
+| `H` / `M` / `L` | Jump to top/middle/bottom of the *visible screen* (not the file) |
+| `zz` / `zt` / `zb` | Recenter the view on the current line (top/middle/bottom) |
+
+See **Jump precisely** below for line-count jumps, scrolling, and
+Flash/Harpoon — those build on top of these.
+
 ## Find & navigate (Telescope) — `<leader>f`
 
 | Keys | Action |
@@ -29,12 +71,30 @@ Inside any picker: type to filter, `<C-n>`/`<C-p>` (or arrows) to move,
 
 | Keys | Action |
 |---|---|
-| `s` | Flash jump — type 1-2 chars, hit the labeled match |
+| `s` | Flash jump — type 1-2 chars, hit the labeled match (searches the whole visible window, not just the current line — doubles as a no-math vertical jump) |
 | `S` | Flash jump to a treesitter node |
+| `{count}j` / `{count}k` | Jump exactly N lines down/up — read N off the gutter (`relativenumber` is on) |
+| `<C-d>` / `<C-u>` | Scroll half a screen down/up |
+| `<C-f>` / `<C-b>` | Scroll a full screen down/up |
+| `gg` / `G` | Jump to top/bottom of file |
+| `ma` then `` `a `` | Set mark `a` at cursor, then jump back to it later from anywhere |
 | `<leader>ha` | Harpoon: pin current file |
 | `<leader>h1`..`<leader>h4` | Harpoon: jump straight to pinned file 1-4 |
 | `<leader>hh` | Harpoon: open/reorder the pinned list |
 | `<C-S-P>` / `<C-S-N>` | Harpoon: previous / next pinned file |
+
+## Jumping in structured text (JSON/YAML/etc.)
+
+| Keys | Action |
+|---|---|
+| `%` | Jump to the matching bracket/brace/paren — land on `{`, leap to its `}` |
+| `[{` / `]}` | Jump out to the enclosing unmatched brace |
+| `<leader>fs` | Fuzzy-jump to any key/field in the file (LSP symbols — works in JSON/YAML too) |
+
+No dedicated "next top-level key" motion is set up yet. The idiomatic vim
+tool for that is folds (`zj`/`zk` jump to the next/previous fold, `za`
+toggles one) with treesitter-based folding — not currently enabled globally
+(only Kotlin buffers fold via kotlin.nvim). Ask if you want that wired up.
 
 ## LSP — mostly builtin
 
@@ -68,6 +128,9 @@ Use like any text object: `daf` deletes a function, `vic` selects inside a class
 
 | Keys | Action |
 |---|---|
+| `yy` / `p` / `P` | Yank line / paste below / paste above |
+| `yyp` | Duplicate the current line (yank + paste in one breath) |
+| `yaf` then `p` | Duplicate a whole block, e.g. a function (yank around function, paste below) |
 | `ys{motion}{char}` | Add surrounding pair |
 | `ds{char}` | Delete surrounding pair |
 | `cs{char1}{char2}` | Change surrounding pair |
