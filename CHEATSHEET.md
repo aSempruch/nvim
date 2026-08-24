@@ -90,6 +90,22 @@ Use like any text object: `daf` deletes a function, `vic` selects inside a class
 | `<leader>gl` | Git log (picker) |
 | `<leader>gB` | Git branches (picker) |
 
+**Reviewing changes, IntelliJ-diff-viewer style:**
+
+1. `<leader>go` — opens Diffview against HEAD: a file-tree panel of every
+   changed file, plus a real side-by-side diff pane.
+2. Pick a file in the panel to load its diff.
+3. `]c` / `[c` — step hunk-by-hunk through that file. (Same two keys as the
+   gutter navigation above — inside a diff view they fall back to vim's
+   native diff-hunk jump instead of gitsigns, so it just does the right
+   thing depending on where you are.)
+4. Move to the next file in the panel and repeat.
+5. `<leader>gc` — close the diff view when done.
+
+For a quick one-off check without leaving your normal editing flow, skip
+Diffview entirely: `]c`/`[c` to jump to a hunk in the buffer you're in, then
+`<leader>gp` to preview it inline, `<leader>gs`/`<leader>gr` to stage/reset it.
+
 ## Diagnostics / outline (Trouble)
 
 | Keys | Action |
