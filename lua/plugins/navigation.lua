@@ -37,12 +37,23 @@ return {
   },
 
   {
-    -- `ys<motion><char>` add, `ds<char>` delete, `cs<char1><char2>`
+    -- `gsa<motion><char>` add, `gsd<char>` delete, `gsr<char1><char2>`
     -- change a surrounding pair -- Neovim core has no equivalent.
     'echasnovski/mini.nvim',
     event = 'VeryLazy',
     config = function()
-      require('mini.surround').setup()
+      require('mini.surround').setup {
+        -- Prefixed with `g` so it doesn't collide with flash.nvim's `s` jump mapping.
+        mappings = {
+          add = 'gsa',
+          delete = 'gsd',
+          find = 'gsf',
+          find_left = 'gsF',
+          highlight = 'gsh',
+          replace = 'gsr',
+          update_n_lines = 'gsn',
+        },
+      }
     end,
   },
 

@@ -148,6 +148,7 @@ Use like any text object: `daf` deletes a function, `vic` selects inside a class
 | `<leader>gp` | Preview hunk |
 | `<leader>gb` | Blame line |
 | `<leader>go` | Diff current file against HEAD |
+| `<leader>gm` | Diff current branch against main (fetches first, PR-style) |
 | `<leader>gh` | File history (current file) |
 | `<leader>gH` | File history (whole repo) |
 | `<leader>gl` | Git log (picker) |
@@ -161,9 +162,17 @@ Use like any text object: `daf` deletes a function, `vic` selects inside a class
 3. `]c` / `[c` — step hunk-by-hunk through that file. (Same two keys as the
    gutter navigation above — inside a diff view they fall back to vim's
    native diff-hunk jump instead of gitsigns, so it just does the right
-   thing depending on where you are.)
+   thing depending on where you are.) The exact changed word/char within a
+   line is already highlighted distinctly (Neovim's default `diffopt`
+   includes `inline:char`) — no extra jump needed, just look at the line.
 4. Move to the next file in the panel and repeat.
 5. `<leader>gc` — close the diff view when done.
+
+Reviewing a whole feature branch against `main` (what GitHub shows you when
+you open a PR) works the same way — use `<leader>gm` instead of `<leader>go`.
+It fetches `origin/main` first, then diffs against the merge-base of
+`origin/main` and `HEAD` (triple-dot), so commits landed on `main` after you
+branched — whether or not you'd fetched them yet — don't show up as noise.
 
 For a quick one-off check without leaving your normal editing flow, skip
 Diffview entirely: `]c`/`[c` to jump to a hunk in the buffer you're in, then

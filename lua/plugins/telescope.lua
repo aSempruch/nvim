@@ -24,6 +24,24 @@ return {
     },
     config = function()
       require('telescope').setup {
+        defaults = {
+          vimgrep_arguments = {
+            'rg', '--color=never', '--no-heading', '--with-filename',
+            '--line-number', '--column', '--smart-case', '--hidden',
+          },
+          file_ignore_patterns = {
+            '%.git/',
+            'node_modules/',
+            '%.venv/',
+            'venv/',
+            '__pycache__/',
+            '%.mypy_cache/',
+            '%.pytest_cache/',
+          },
+        },
+        pickers = {
+          find_files = { hidden = true },
+        },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
         },

@@ -16,6 +16,7 @@ return {
         'lua_ls', -- editing this config
         'vtsls', 'eslint', -- dps-ui
         'jsonls', 'yamlls', 'html', 'cssls', 'bashls', -- both repos (k8s yaml, etc.)
+        'kotlin_lsp', -- kotlin.nvim starts the client itself; see automatic_enable below
       },
       -- kotlin.nvim configures and starts kotlin_lsp itself; if
       -- mason-lspconfig also auto-enables it, the resulting client is
