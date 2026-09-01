@@ -37,6 +37,20 @@ map('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 -- with the text that just got replaced.
 map('v', '<leader>p', '"_dP', { desc = 'Paste over selection, keep register' })
 
+-- <C-d>/<C-u> scroll a fixed 8 lines. (The 'scroll' option can't be used
+-- for this: Vim silently resets it to half the window height whenever the
+-- window is resized, so it gets clobbered during startup.) A count given
+-- directly to <C-d>/<C-u> isn't subject to that reset.
+map('n', '<C-d>', '8<C-d>', { desc = 'Scroll down 8 lines' })
+map('n', '<C-u>', '8<C-u>', { desc = 'Scroll up 8 lines' })
+
+-- Arrow keys scroll the view instead of moving the cursor: up/down mirror
+-- <C-u>/<C-d> above, left/right pan horizontally by a half screen width.
+map('n', '<Down>', '8<C-d>', { desc = 'Scroll down' })
+map('n', '<Up>', '8<C-u>', { desc = 'Scroll up' })
+map('n', '<Left>', 'zH', { desc = 'Scroll left' })
+map('n', '<Right>', 'zL', { desc = 'Scroll right' })
+
 map('n', '<leader>ui', function()
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = 0 }, { bufnr = 0 })
 end, { desc = 'Toggle inlay hints' })

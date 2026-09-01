@@ -153,6 +153,9 @@ Use like any text object: `daf` deletes a function, `vic` selects inside a class
 | `<leader>gH` | File history (whole repo) |
 | `<leader>gl` | Git log (picker) |
 | `<leader>gB` | Git branches (picker) |
+| `<leader>gi` | List GitHub PRs (Octo) |
+| `<leader>gv` | Open the PR for the current branch (Octo) |
+| `<leader>gw` | (in an Octo PR buffer) Checkout PR into a `/tmp` worktree + start/resume review |
 
 **Reviewing changes, IntelliJ-diff-viewer style:**
 
@@ -177,6 +180,71 @@ branched — whether or not you'd fetched them yet — don't show up as noise.
 For a quick one-off check without leaving your normal editing flow, skip
 Diffview entirely: `]c`/`[c` to jump to a hunk in the buffer you're in, then
 `<leader>gp` to preview it inline, `<leader>gs`/`<leader>gr` to stage/reset it.
+
+**Reviewing a GitHub PR (Octo + Diffview):**
+
+Octo handles the GitHub side (listing PRs, checkout, posting reviews);
+Diffview stays the tool for actually walking the diff, since it's the
+richer diff UX and its `gf` opens real file buffers (LSP works). Auth is
+your existing `gh` CLI login, no separate token needed.
+
+1. `<leader>gi` — list open PRs.
+2. `<C-o>` (in that picker) — checks out the highlighted PR's branch. (Or
+   `<leader>gv` if you're already on the PR's branch and just want its
+   Octo buffer — description, timeline, comments.)
+3. `<leader>gm` — Diffview against `main`, PR-style (see above). Since
+   you're now on the PR's branch, this is exactly the PR's diff.
+4. `]c` / `[c` to step hunk-by-hunk, same as any other Diffview session.
+5. To dig deeper on any line: `gf` opens the real file at that line in a
+   normal buffer (your previous tabpage) — `gd`, `K`, etc. all work since
+   it's a genuine file buffer, not a diff-pane object. `<C-w><C-f>` /
+   `<C-w>gf` do the same in a split/new tab if you want the diff to stay
+   visible.
+
+To leave inline comments or submit an approval/request-changes instead of
+just reading, use Octo's own review flow on that same checked-out branch:
+`:Octo review start` opens Octo's comment-capable diff, `:Octo review
+comment` on a line adds a comment, `:Octo review submit` posts it. Inside
+that diff, `gf` opens the real file in a new tab (overridden from Octo's
+default of `:edit`-ing it in the diff pane itself) so the review layout
+stays intact behind it.
+
+No pane-switching needed to move between files -- from the diff pane
+itself: `]q`/`[q` next/previous changed file, `]Q`/`[Q` first/last,
+`]u`/`[u` next/previous *unviewed* file (skips ones already marked
+viewed). `<localleader>e` (`<space>e`) jumps focus into the file panel
+instead if you'd rather browse visually.
+
+**Same thing, but without touching this repo's checkout:**
+
+`<leader>gw` from inside an Octo PR buffer (`<CR>` on a PR in `<leader>gi`'s
+list first) does the checkout + review above, but into an isolated
+worktree under `/tmp/octo-worktrees/<repo>-pr-<n>` instead of switching
+branches here. It opens a new tab, `:tcd`s into the worktree, and lands you
+straight in the review for it -- resuming a pending review you already
+started on that PR if one exists, starting fresh otherwise. Since a git
+worktree checkout never touches your current branch, this is the one to
+use when you're mid-work on something else and just want to review a
+colleague's PR.
+Worktrees aren't auto-cleaned; `git worktree remove <path>` if it ever
+piles up.
+
+**Quick look at a PR diff with zero local git changes (no fetch, no
+checkout):**
+
+1. `<leader>gi` — list PRs.
+2. `<CR>` on a PR (not `<C-o>`) — opens its Octo buffer via the GitHub API
+   only; nothing local changes.
+3. `<localleader>pd` (`<space>pd`) — dumps the full unified diff as a
+   read-only scratch buffer, straight from `gh api .../pulls/<n>` (same
+   thing as `gh pr diff <n>` in a terminal).
+
+This is a flat diff buffer — no file-tree panel, no `]c`/`[c` hunk nav, no
+`gf` (there's no real checked-out file to jump to). `<localleader>pf`
+("list PR changed files") looks tempting for the same goal but don't use it
+without checking out first — selecting a file there runs `:edit <file>`
+against your *current* working tree, so without a checkout it silently
+opens your own branch's version of that file, not the PR's.
 
 ## Diagnostics / outline (Trouble)
 

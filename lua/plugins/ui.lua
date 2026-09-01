@@ -48,6 +48,14 @@ return {
   },
 
   {
+    -- Fzf-style filtering and a live file preview pane for the native
+    -- quickfix window -- what `grr` (LSP references) populates.
+    'kevinhwang91/nvim-bqf',
+    ft = 'qf',
+    opts = {},
+  },
+
+  {
     -- Dired-style file explorer: edit the filesystem like a normal buffer
     -- (rename/delete/create by editing text, then :w). Also a required
     -- dependency of kotlin.nvim (decompiled class-file viewing).
@@ -56,6 +64,18 @@ return {
     opts = { default_file_explorer = true },
     keys = {
       { '-', function() require('oil').open() end, desc = 'Open parent directory' },
+    },
+  },
+
+  {
+    -- Renders markdown (headings, code blocks, tables, checkboxes, ...) in
+    -- place using the treesitter parser -- no browser or external process.
+    'MeanderingProgrammer/render-markdown.nvim',
+    ft = { 'markdown' },
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
+    opts = {},
+    keys = {
+      { '<leader>um', function() require('render-markdown').toggle() end, desc = 'Toggle rendered markdown' },
     },
   },
 }
