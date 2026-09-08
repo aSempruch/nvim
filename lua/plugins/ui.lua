@@ -61,7 +61,15 @@ return {
     -- dependency of kotlin.nvim (decompiled class-file viewing).
     'stevearc/oil.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    opts = { default_file_explorer = true },
+    opts = {
+      default_file_explorer = true,
+      view_options = {
+        show_hidden = true,
+        is_always_hidden = function(name, _)
+          return name == '.DS_Store'
+        end,
+      },
+    },
     keys = {
       { '-', function() require('oil').open() end, desc = 'Open parent directory' },
     },

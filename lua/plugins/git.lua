@@ -70,17 +70,32 @@ return {
 			{ '<leader>gh', '<cmd>DiffviewFileHistory %<CR>', desc = 'File history (current file)' },
 			{ '<leader>gH', '<cmd>DiffviewFileHistory<CR>',   desc = 'File history (whole repo)' },
 		},
-		opts = {
-			hooks = {
-				-- Long lines wrapping would desync the left/right panes' line
-				-- alignment, so keep diff panes nowrap regardless of the global
-				-- default.
-				diff_buf_read = function() vim.opt_local.wrap = false end,
-			},
-			file_panel = {
-				win_config = { width = 80 },
-			},
-		},
+		opts = function()
+			local actions = require 'diffview.actions'
+			return {
+				hooks = {
+					-- Long lines wrapping would desync the left/right panes' line
+					-- alignment, so keep diff panes nowrap regardless of the global
+					-- default.
+					diff_buf_read = function() vim.opt_local.wrap = false end,
+				},
+				file_panel = {
+					win_config = { width = 80 },
+				},
+				keymaps = {
+					-- Match Octo's PR-review next/prev-file bindings so the same
+					-- muscle memory works in a plain diffview.
+					view = {
+						[']q'] = actions.select_next_entry,
+						['[q'] = actions.select_prev_entry,
+					},
+					file_panel = {
+						[']q'] = actions.select_next_entry,
+						['[q'] = actions.select_prev_entry,
+					},
+				},
+			}
+		end,
 	},
 
 	{
@@ -97,7 +112,25 @@ return {
 		cmd = 'Octo',
 		keys = {
 			{ '<leader>gi', '<cmd>Octo pr list<CR>', desc = 'List PRs' },
-			{ '<leader>gv', '<cmd>Octo pr edit<CR>',  desc = 'Open PR for current branch' },
+			{
+				'<leader>gv',
+				function()
+					-- Octo's own `Octo pr` (view) has no create fallback -- it just
+					-- errors with "No pr found for current branch" -- so check
+					-- ourselves first and route to `pr create` when there isn't one.
+					vim.system({ 'gh', 'pr', 'view', '--json', 'number' }, { cwd = vim.fn.getcwd() },
+						function(result)
+							vim.schedule(function()
+								if result.code == 0 and vim.trim(result.stdout or '') ~= '' then
+									vim.cmd 'Octo pr'
+								else
+									vim.cmd 'Octo pr create'
+								end
+							end)
+						end)
+				end,
+				desc = 'Open PR for current branch (create if none exists)',
+			},
 		},
 		config = function()
 			require('octo').setup {}
@@ -214,7 +247,7 @@ return {
 			vim.api.nvim_create_autocmd('FileType', {
 				pattern = 'octo',
 				callback = function(args)
-					vim.keymap.set('n', '<leader>gw', checkout_pr_worktree,
+					vim.keymap.set('n', '<leader>pw', checkout_pr_worktree,
 						{ buffer = args.buf, desc = 'Checkout PR into worktree + start review' })
 				end,
 			})
