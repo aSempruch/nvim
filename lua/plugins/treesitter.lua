@@ -65,6 +65,18 @@ return {
       -- not ]c/[c, since gitsigns owns that pair for hunk navigation.
       map('n', ']f', function() move_mod.goto_next_start('@function.outer', 'textobjects') end, { desc = 'Next function' })
       map('n', '[f', function() move_mod.goto_previous_start('@function.outer', 'textobjects') end, { desc = 'Previous function' })
+
+      -- `;` / `,` repeat the last move, whatever it was: the ]f/[f above,
+      -- gitsigns' ]c/[c hunk jumps, diffview/Octo's ]q/[q next-file, and
+      -- plain f/F/t/T (which must be re-mapped so the module sees them).
+      -- See config/repeatable.lua for wrapping other motions.
+      local rm = require 'nvim-treesitter-textobjects.repeatable_move'
+      map({ 'n', 'x', 'o' }, ';', rm.repeat_last_move_next, { desc = 'Repeat last move forward' })
+      map({ 'n', 'x', 'o' }, ',', rm.repeat_last_move_previous, { desc = 'Repeat last move backward' })
+      map({ 'n', 'x', 'o' }, 'f', rm.builtin_f_expr, { expr = true })
+      map({ 'n', 'x', 'o' }, 'F', rm.builtin_F_expr, { expr = true })
+      map({ 'n', 'x', 'o' }, 't', rm.builtin_t_expr, { expr = true })
+      map({ 'n', 'x', 'o' }, 'T', rm.builtin_T_expr, { expr = true })
     end,
   },
 

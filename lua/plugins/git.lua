@@ -12,16 +12,22 @@ return {
 						{ buffer = bufnr, desc = desc })
 				end
 
-				map('n', ']c', function()
-					if vim.wo.diff then return ']c' end
-					vim.schedule(gs.next_hunk)
-					return '<Ignore>'
-				end, 'Next hunk')
-				map('n', '[c', function()
-					if vim.wo.diff then return '[c' end
-					vim.schedule(gs.prev_hunk)
-					return '<Ignore>'
-				end, 'Previous hunk')
+				-- In a real `:diffthis` window fall through to Vim's own ]c/[c;
+				-- otherwise jump between gitsigns hunks. Wrapped so `;`/`,`
+				-- repeat the jump (see config/repeatable.lua).
+				local function hunk(direction)
+					return function()
+						if vim.wo.diff then
+							local key = direction == 'next' and ']c' or '[c'
+							vim.cmd.normal { vim.v.count1 .. key, bang = true }
+						else
+							gs.nav_hunk(direction, { count = vim.v.count1 })
+						end
+					end
+				end
+				local next_hunk, prev_hunk = require('config.repeatable').pair(hunk 'next', hunk 'prev')
+				map('n', ']c', next_hunk, 'Next hunk')
+				map('n', '[c', prev_hunk, 'Previous hunk')
 
 				map('n', '<leader>gs', gs.stage_hunk, 'Stage hunk')
 				map('n', '<leader>gr', gs.reset_hunk, 'Reset hunk')
@@ -72,6 +78,9 @@ return {
 		},
 		opts = function()
 			local actions = require 'diffview.actions'
+			-- Wrapped so `;`/`,` repeat next/prev-file (see config/repeatable.lua).
+			local next_file, prev_file = require('config.repeatable').pair(
+				actions.select_next_entry, actions.select_prev_entry)
 			return {
 				hooks = {
 					-- Long lines wrapping would desync the left/right panes' line
@@ -86,12 +95,12 @@ return {
 					-- Match Octo's PR-review next/prev-file bindings so the same
 					-- muscle memory works in a plain diffview.
 					view = {
-						[']q'] = actions.select_next_entry,
-						['[q'] = actions.select_prev_entry,
+						[']q'] = next_file,
+						['[q'] = prev_file,
 					},
 					file_panel = {
-						[']q'] = actions.select_next_entry,
-						['[q'] = actions.select_prev_entry,
+						[']q'] = next_file,
+						['[q'] = prev_file,
 					},
 				},
 			}
@@ -134,6 +143,15 @@ return {
 		},
 		config = function()
 			require('octo').setup {}
+
+			-- Octo only lets you configure the *lhs* of its review mappings; the
+			-- callbacks come from its internal `octo.mappings` table, which it
+			-- looks up by name each time it binds a review buffer. Swap the
+			-- next/prev-file entries there for repeatable versions so `;`/`,`
+			-- work in PR reviews too (see config/repeatable.lua).
+			local octo_maps = require 'octo.mappings'
+			octo_maps.select_next_entry, octo_maps.select_prev_entry =
+				require('config.repeatable').pair(octo_maps.select_next_entry, octo_maps.select_prev_entry)
 
 			-- Checkout the current PR into an isolated worktree under /tmp
 			-- (instead of switching branches in this repo) and jump straight
