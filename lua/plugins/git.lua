@@ -181,8 +181,10 @@ return {
 			-- next/prev-file and next/prev-comment entries there for repeatable
 			-- versions so `;`/`,` work in PR reviews too (see config/repeatable.lua).
 			local octo_maps = require 'octo.mappings'
+			local select_next_entry = octo_maps.select_next_entry
+			local select_prev_entry = octo_maps.select_prev_entry
 			octo_maps.select_next_entry, octo_maps.select_prev_entry =
-				require('config.repeatable').pair(octo_maps.select_next_entry, octo_maps.select_prev_entry)
+				require('config.repeatable').pair(select_next_entry, select_prev_entry)
 			octo_maps.next_comment, octo_maps.prev_comment =
 				require('config.repeatable').pair(octo_maps.next_comment, octo_maps.prev_comment)
 
@@ -208,8 +210,9 @@ return {
 						vim.b[bufnr][at_boundary_var] = false
 					elseif vim.b[bufnr][at_boundary_var] then
 						vim.b[bufnr][at_boundary_var] = false
-						local entry_jump = direction == 'next' and octo_maps.select_next_entry or
-							octo_maps.select_prev_entry
+						-- This file jump is part of the hunk motion. Use Octo's raw
+						-- callback so it does not replace the repeat history with ]q/[q.
+						local entry_jump = direction == 'next' and select_next_entry or select_prev_entry
 						entry_jump()
 					else
 						vim.b[bufnr][at_boundary_var] = true
