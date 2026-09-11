@@ -161,6 +161,9 @@ return {
 		},
 		config = function()
 			require('octo').setup {
+				-- Back the PR side of review diffs with the checked-out file so
+				-- language servers can provide hints, navigation, and diagnostics.
+				use_local_fs = true,
 				mappings = {
 					review_diff = {
 						-- `next_hunk`/`prev_hunk` aren't built-in Octo actions -- they're
