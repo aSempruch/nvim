@@ -164,6 +164,7 @@ return {
 				-- Back the PR side of review diffs with the checked-out file so
 				-- language servers can provide hints, navigation, and diagnostics.
 				use_local_fs = true,
+				reviews = { auto_show_threads = false },
 				mappings = {
 					review_diff = {
 						-- `next_hunk`/`prev_hunk` aren't built-in Octo actions -- they're
@@ -185,6 +186,18 @@ return {
 				require('config.repeatable').pair(octo_maps.select_next_entry, octo_maps.select_prev_entry)
 			octo_maps.next_comment, octo_maps.prev_comment =
 				require('config.repeatable').pair(octo_maps.next_comment, octo_maps.prev_comment)
+
+			-- Octo's built-in auto-show handler runs mapped ]c inside its generated
+			-- comment buffer to position the cursor. Install the same handler with
+			-- repeat isolation so that UI bookkeeping does not replace the user's move.
+			vim.api.nvim_create_autocmd('CursorMoved', {
+				group = vim.api.nvim_create_augroup('config-octo-auto-show-threads', { clear = true }),
+				pattern = '*',
+				callback = require('config.repeatable').preserve_last_move(function()
+					require('octo.reviews.thread-panel').show_review_threads(false)
+				end),
+				desc = 'Show Octo review threads without changing repeat navigation',
+			})
 
 			-- kotlin.nvim switches a newly attached Kotlin window to LSP expression
 			-- folds. In a review that overrides Octo's diff folds on only the local

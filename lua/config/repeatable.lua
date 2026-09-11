@@ -34,4 +34,18 @@ function M.pair(next_fn, prev_fn)
       function() get_move() { forward = false } end
 end
 
+--- Run an internal action without allowing it to replace the user's last move.
+--- @param fn function
+--- @return function
+function M.preserve_last_move(fn)
+  return function(...)
+    local rm = require 'nvim-treesitter-textobjects.repeatable_move'
+    local last_move = rm.last_move
+    local results = { pcall(fn, ...) }
+    rm.last_move = last_move
+    if not results[1] then error(results[2], 0) end
+    return unpack(results, 2)
+  end
+end
+
 return M

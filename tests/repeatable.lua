@@ -25,3 +25,10 @@ assert(inner_calls == 1, 'reverse outer motion did not run its nested backward a
 rm.repeat_last_move_previous()
 assert(inner_calls == 0, 'reversing the outer motion did not run its nested action')
 assert(rm.last_move.func == reverse_repeat, 'nested reverse motion replaced the outer repeat record')
+
+outer_next()
+local user_repeat = rm.last_move.func
+local automatic_navigation = require('config.repeatable').preserve_last_move(inner_next)
+automatic_navigation()
+assert(inner_calls == 2, 'preserved automatic navigation did not run')
+assert(rm.last_move.func == user_repeat, 'automatic navigation replaced the user repeat record')
