@@ -245,9 +245,21 @@ return {
 			octo_maps.next_hunk, octo_maps.prev_hunk =
 				require('config.repeatable').pair(octo_diff_hunk 'next', octo_diff_hunk 'prev')
 
-			-- Checkout the current PR into an isolated worktree under /tmp
+			-- Checkout the current PR into an isolated local clone under /tmp
 			-- (instead of switching branches in this repo) and jump straight
 			-- into Octo's side-by-side review for it.
+			--
+			-- This is a real `git clone`, not a `git worktree add`. A linked
+			-- worktree looks like the obvious choice, but dps-documentprocessingservice's
+			-- build.gradle applies the `org.ajoberstar.reckon` version plugin,
+			-- which reads repo state through JGit/grgit -- and JGit's linked-worktree
+			-- support is broken: it throws `NoWorkTreeException: Bare Repository
+			-- has neither a working tree, nor an index` while resolving the
+			-- project version, crashing Gradle configuration entirely (and with
+			-- it, kotlin-lsp's project sync -- see :KotlinShowLogs). A plain
+			-- clone is a normal, non-linked repo JGit handles fine. Since the
+			-- source is a local path, `git clone` auto-hardlinks the object
+			-- store, so it's nearly as cheap as a worktree would have been.
 			local worktree_root = '/tmp/octo-worktrees'
 			local function checkout_pr_worktree()
 				local buffer = require('octo.utils').get_current_buffer()
@@ -278,80 +290,64 @@ return {
 					end)
 				end
 
-				-- `gh pr checkout` updates the local branch via a fetch-style ref
-				-- update rather than a plain `git checkout`, so re-running it
-				-- against a worktree that already has the branch checked out
-				-- fails with "already used by worktree" -- git's checked-out-ref
-				-- guard doesn't exempt the current worktree the way `git checkout
-				-- <branch>` does. If the worktree already has a branch checked
-				-- out, skip `gh pr checkout` and just fast-forward it to the
-				-- PR's latest commit instead.
-				local function refresh_existing_checkout(branch)
-					vim.system({ 'git', 'fetch', 'origin', branch }, { cwd = worktree_path }, function(fetch_result)
-						if fetch_result.code ~= 0 then
-							vim.schedule(function()
-								vim.notify('git fetch failed:\n' .. fetch_result.stderr, vim.log.levels.ERROR)
-							end)
-							return
-						end
-						vim.system({ 'git', 'reset', '--hard', 'FETCH_HEAD' }, { cwd = worktree_path },
-							function(reset_result)
-								if reset_result.code ~= 0 then
-									vim.schedule(function()
-										vim.notify('git reset failed:\n' .. reset_result.stderr, vim.log.levels.ERROR)
-									end)
-									return
-								end
-								start_review_in_worktree()
-							end)
-					end)
-				end
-
-				local function checkout_in_worktree()
-					vim.system({ 'git', 'branch', '--show-current' }, { cwd = worktree_path }, function(branch_result)
-						if branch_result.code ~= 0 then
-							vim.schedule(function()
-								vim.notify('git branch --show-current failed:\n' .. branch_result.stderr,
-									vim.log.levels.ERROR)
-							end)
-							return
-						end
-
-						local current_branch = vim.trim(branch_result.stdout or '')
-						if current_branch ~= '' then
-							refresh_existing_checkout(current_branch)
-							return
-						end
-
-						vim.system({ 'gh', 'pr', 'checkout', tostring(pr_number) }, { cwd = worktree_path },
-							function(result)
-								if result.code ~= 0 then
-									vim.schedule(function()
-										vim.notify('gh pr checkout failed:\n' .. result.stderr, vim.log.levels.ERROR)
-									end)
-									return
-								end
-								start_review_in_worktree()
-							end)
-					end)
+				-- Plain clones aren't subject to git's "already used by
+				-- worktree" checked-out-ref guard, so `gh pr checkout` can
+				-- just be re-run unconditionally -- it updates the local
+				-- branch via a fetch-style ref update rather than a plain
+				-- `git checkout`, so this is safe even when already on it.
+				local function checkout_in_clone()
+					vim.system({ 'gh', 'pr', 'checkout', tostring(pr_number) }, { cwd = worktree_path },
+						function(result)
+							if result.code ~= 0 then
+								vim.schedule(function()
+									vim.notify('gh pr checkout failed:\n' .. result.stderr, vim.log.levels.ERROR)
+								end)
+								return
+							end
+							start_review_in_worktree()
+						end)
 				end
 
 				if vim.fn.isdirectory(worktree_path) == 1 then
-					checkout_in_worktree()
+					checkout_in_clone()
 					return
 				end
 
 				vim.fn.mkdir(worktree_root, 'p')
-				vim.system({ 'git', 'worktree', 'add', '--detach', worktree_path }, { cwd = repo_root },
-					function(result)
-						if result.code ~= 0 then
+				vim.system({ 'git', 'remote', 'get-url', 'origin' }, { cwd = repo_root }, function(remote_result)
+					if remote_result.code ~= 0 then
+						vim.schedule(function()
+							vim.notify('git remote get-url origin failed:\n' .. remote_result.stderr,
+								vim.log.levels.ERROR)
+						end)
+						return
+					end
+					local origin_url = vim.trim(remote_result.stdout or '')
+
+					vim.system({ 'git', 'clone', repo_root, worktree_path }, {}, function(clone_result)
+						if clone_result.code ~= 0 then
 							vim.schedule(function()
-								vim.notify('git worktree add failed:\n' .. result.stderr, vim.log.levels.ERROR)
+								vim.notify('git clone failed:\n' .. clone_result.stderr, vim.log.levels.ERROR)
 							end)
 							return
 						end
-						checkout_in_worktree()
+
+						-- A local-path clone defaults `origin` to repo_root;
+						-- point it at the real remote so `gh pr checkout` (and
+						-- any later fetch) reaches GitHub, not the disk.
+						vim.system({ 'git', 'remote', 'set-url', 'origin', origin_url }, { cwd = worktree_path },
+							function(set_url_result)
+								if set_url_result.code ~= 0 then
+									vim.schedule(function()
+										vim.notify('git remote set-url failed:\n' .. set_url_result.stderr,
+											vim.log.levels.ERROR)
+									end)
+									return
+								end
+								checkout_in_clone()
+							end)
 					end)
+				end)
 			end
 
 			vim.api.nvim_create_autocmd('FileType', {
