@@ -73,6 +73,59 @@ return {
       local rm = require 'nvim-treesitter-textobjects.repeatable_move'
       map({ 'n', 'x', 'o' }, ';', rm.repeat_last_move_next, { desc = 'Repeat last move forward' })
       map({ 'n', 'x', 'o' }, ',', rm.repeat_last_move_previous, { desc = 'Repeat last move backward' })
+
+      -- Native structural motions do not register themselves with the
+      -- repeatable-move module. Route every forward/backward navigation pair
+      -- through it while preserving Vim's built-in motion and count handling.
+      local function native_motion(key)
+        return function() vim.cmd.normal { vim.v.count1 .. key, bang = true } end
+      end
+      local function map_native_pair(next_key, prev_key, target)
+        local next_motion, prev_motion = require('config.repeatable').pair(
+          native_motion(next_key), native_motion(prev_key))
+        map('n', next_key, next_motion, { desc = 'Next ' .. target })
+        map('n', prev_key, prev_motion, { desc = 'Previous ' .. target })
+      end
+
+      map_native_pair('}', '{', 'paragraph')
+      map_native_pair(']]', '[[', 'section start')
+      map_native_pair('][', '[]', 'section end')
+      map_native_pair("]'", "['", 'line mark')
+      map_native_pair(']`', '[`', 'mark')
+      map_native_pair('])', '[(', 'unmatched parenthesis')
+      map_native_pair(']}', '[{', 'unmatched brace')
+      map_native_pair(']m', '[m', 'method start')
+      map_native_pair(']M', '[M', 'method end')
+      map_native_pair(']#', '[#', 'preprocessor conditional')
+      map_native_pair(']*', '[*', 'C comment boundary')
+      map_native_pair(']/', '[/', 'C comment boundary')
+      map_native_pair(']s', '[s', 'misspelling')
+      map_native_pair(']z', '[z', 'open fold boundary')
+      map_native_pair(']c', '[c', 'diff change')
+
+      -- Neovim supplies these directional bracket mappings as Lua callbacks.
+      -- Preserve those callbacks so plugin-free buffers participate too;
+      -- buffer-local plugin mappings can still override them where needed.
+      local function map_existing_pair(next_key, prev_key)
+        local next_map = vim.fn.maparg(next_key, 'n', false, true)
+        local prev_map = vim.fn.maparg(prev_key, 'n', false, true)
+        if type(next_map.callback) ~= 'function' or type(prev_map.callback) ~= 'function' then return end
+
+        local next_motion, prev_motion = require('config.repeatable').pair(next_map.callback, prev_map.callback)
+        map('n', next_key, next_motion, { desc = next_map.desc })
+        map('n', prev_key, prev_motion, { desc = prev_map.desc })
+      end
+
+      map_existing_pair(']b', '[b')
+      map_existing_pair(']q', '[q')
+      map_existing_pair(']l', '[l')
+      map_existing_pair(']a', '[a')
+      map_existing_pair(']t', '[t')
+      map_existing_pair(']d', '[d')
+      map_existing_pair(']<C-Q>', '[<C-Q>')
+      map_existing_pair(']<C-L>', '[<C-L>')
+      map_existing_pair(']<C-T>', '[<C-T>')
+
       map({ 'n', 'x', 'o' }, 'f', rm.builtin_f_expr, { expr = true })
       map({ 'n', 'x', 'o' }, 'F', rm.builtin_F_expr, { expr = true })
       map({ 'n', 'x', 'o' }, 't', rm.builtin_t_expr, { expr = true })

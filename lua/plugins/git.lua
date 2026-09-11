@@ -213,8 +213,8 @@ return {
 					end
 				end
 			end
-			octo_maps.next_hunk = octo_diff_hunk 'next'
-			octo_maps.prev_hunk = octo_diff_hunk 'prev'
+			octo_maps.next_hunk, octo_maps.prev_hunk =
+				require('config.repeatable').pair(octo_diff_hunk 'next', octo_diff_hunk 'prev')
 
 			-- Checkout the current PR into an isolated worktree under /tmp
 			-- (instead of switching branches in this repo) and jump straight

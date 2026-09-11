@@ -37,8 +37,9 @@ config-specific, built on top of these.
 | `0` / `^` / `$` | Start of line / first non-blank char / end of line |
 | `f{char}` / `F{char}` | Jump to next/previous occurrence of `char` on the line |
 | `t{char}` / `T{char}` | Jump to just before/after next/previous occurrence of `char` |
-| `;` / `,` | Repeat the last `f`/`t`/`F`/`T`, same / opposite direction |
+| `;` / `,` | Continue the last paired navigation forward / backward (`f`/`t`, paragraphs, methods, hunks, diagnostics, quickfix entries, etc.) |
 | `{` / `}` | Jump to previous/next blank-line-separated paragraph |
+| `[m` / `]m` | Jump to previous/next method start |
 | `%` | Jump to the matching bracket/brace/paren |
 | `/pattern` / `?pattern` | Search forward / backward, `<CR>` to confirm |
 | `n` / `N` | Repeat last search, same / opposite direction |
