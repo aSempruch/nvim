@@ -188,6 +188,32 @@ return {
 			octo_maps.next_comment, octo_maps.prev_comment =
 				require('config.repeatable').pair(octo_maps.next_comment, octo_maps.prev_comment)
 
+			-- kotlin.nvim switches a newly attached Kotlin window to LSP expression
+			-- folds. In a review that overrides Octo's diff folds on only the local
+			-- (right) side, so the two panes stop lining up. Restore Octo's window
+			-- settings after every LspAttach callback has finished.
+			vim.api.nvim_create_autocmd('LspAttach', {
+				group = vim.api.nvim_create_augroup('config-octo-diff-folds', { clear = true }),
+				callback = function(args)
+					if not vim.b[args.buf].octo_diff_props then
+						return
+					end
+
+					vim.schedule(function()
+						if not vim.api.nvim_buf_is_valid(args.buf) then
+							return
+						end
+						for _, winid in ipairs(vim.fn.win_findbuf(args.buf)) do
+							if vim.api.nvim_get_option_value('diff', { win = winid }) then
+								vim.api.nvim_set_option_value('foldmethod', 'diff', { win = winid })
+								vim.api.nvim_set_option_value('foldlevel', 0, { win = winid })
+							end
+						end
+					end)
+				end,
+				desc = 'Keep Octo review diff folds aligned after LSP attach',
+			})
+
 			-- Review-diff buffers are synthetic (`octo://...`), so gitsigns never
 			-- attaches to them and never gets a chance to fall through to the
 			-- next/previous file the way ]q/[q do (see the gitsigns on_attach
