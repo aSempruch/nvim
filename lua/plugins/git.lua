@@ -108,6 +108,24 @@ return {
 	},
 
 	{
+		-- In-editor status/stage/commit UI (magit-style) -- the CLI is still
+		-- fine for a quick `git commit`, but this covers interactive staging
+		-- and writing a commit message without leaving the buffer.
+		'NeogitOrg/neogit',
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'sindrets/diffview.nvim',
+		},
+		cmd = 'Neogit',
+		keys = {
+			{ '<leader>gg', '<cmd>Neogit<CR>', desc = 'Git status (Neogit)' },
+		},
+		opts = {
+			integrations = { diffview = true },
+		},
+	},
+
+	{
 		-- GitHub PR/issue review from inside buffers: PR description,
 		-- inline review threads, and approve/request-changes. Auth is
 		-- delegated to the `gh` CLI, so `gh auth login` is the only setup
@@ -142,16 +160,61 @@ return {
 			},
 		},
 		config = function()
-			require('octo').setup {}
+			require('octo').setup {
+				mappings = {
+					review_diff = {
+						-- `next_hunk`/`prev_hunk` aren't built-in Octo actions -- they're
+						-- defined below on `octo_maps`, the same way this config wires
+						-- up any other custom mapping callback.
+						next_hunk = { lhs = ']c', desc = 'move to next hunk (or next file)' },
+						prev_hunk = { lhs = '[c', desc = 'move to previous hunk (or previous file)' },
+					},
+				},
+			}
 
 			-- Octo only lets you configure the *lhs* of its review mappings; the
 			-- callbacks come from its internal `octo.mappings` table, which it
 			-- looks up by name each time it binds a review buffer. Swap the
-			-- next/prev-file entries there for repeatable versions so `;`/`,`
-			-- work in PR reviews too (see config/repeatable.lua).
+			-- next/prev-file and next/prev-comment entries there for repeatable
+			-- versions so `;`/`,` work in PR reviews too (see config/repeatable.lua).
 			local octo_maps = require 'octo.mappings'
 			octo_maps.select_next_entry, octo_maps.select_prev_entry =
 				require('config.repeatable').pair(octo_maps.select_next_entry, octo_maps.select_prev_entry)
+			octo_maps.next_comment, octo_maps.prev_comment =
+				require('config.repeatable').pair(octo_maps.next_comment, octo_maps.prev_comment)
+
+			-- Review-diff buffers are synthetic (`octo://...`), so gitsigns never
+			-- attaches to them and never gets a chance to fall through to the
+			-- next/previous file the way ]q/[q do (see the gitsigns on_attach
+			-- above). Wire ]c/[c here instead: try the native diff-hunk jump, and
+			-- only once a press fails to move the cursor *twice in a row* --
+			-- i.e. you're already sitting at the last/first hunk and pressed
+			-- again -- fall through to the next/previous file. The first no-op
+			-- press is left alone so it still reads as "no more hunks here",
+			-- same as plain Vim ]c/[c.
+			local function octo_diff_hunk(direction)
+				local key = direction == 'next' and ']c' or '[c'
+				local at_boundary_var = direction == 'next' and 'octo_at_last_hunk' or 'octo_at_first_hunk'
+				return function()
+					local bufnr = vim.api.nvim_get_current_buf()
+					local before = vim.api.nvim_win_get_cursor(0)
+					vim.cmd.normal { key, bang = true }
+					local after = vim.api.nvim_win_get_cursor(0)
+
+					if before[1] ~= after[1] or before[2] ~= after[2] then
+						vim.b[bufnr][at_boundary_var] = false
+					elseif vim.b[bufnr][at_boundary_var] then
+						vim.b[bufnr][at_boundary_var] = false
+						local entry_jump = direction == 'next' and octo_maps.select_next_entry or
+							octo_maps.select_prev_entry
+						entry_jump()
+					else
+						vim.b[bufnr][at_boundary_var] = true
+					end
+				end
+			end
+			octo_maps.next_hunk = octo_diff_hunk 'next'
+			octo_maps.prev_hunk = octo_diff_hunk 'prev'
 
 			-- Checkout the current PR into an isolated worktree under /tmp
 			-- (instead of switching branches in this repo) and jump straight
