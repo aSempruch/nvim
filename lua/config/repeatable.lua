@@ -20,7 +20,12 @@ function M.pair(next_fn, prev_fn)
     if not move then
       local rm = require 'nvim-treesitter-textobjects.repeatable_move'
       move = rm.make_repeatable_move(function(opts)
+        -- A high-level motion may use another repeatable motion internally
+        -- (for example, Octo's ]c advances files through its ]q action).
+        -- Keep the command the user invoked as the repeat target.
+        local outer_move = rm.last_move
         if opts.forward then next_fn() else prev_fn() end
+        rm.last_move = outer_move
       end)
     end
     return move
