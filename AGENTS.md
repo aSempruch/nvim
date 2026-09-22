@@ -11,3 +11,10 @@ is not the current community favorite; buffer-based/floating explorers like `oil
 If a request is basically "give me the IntelliJ version of X," call it out and name the
 current nvim-native/community-preferred alternative before implementing the IntelliJ-alike,
 even if that alternative looks less familiar coming from an IDE.
+
+## Plugin lockfile
+
+Let lazy.nvim manage `lazy-lock.json`. Plugin installs or updates may naturally bump
+other plugin versions; review and commit the generated lockfile rather than hand-editing
+entries to keep the diff limited to one plugin. Verify Neovim starts with the recorded
+versions.
