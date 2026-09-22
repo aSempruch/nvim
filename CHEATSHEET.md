@@ -262,6 +262,7 @@ opens your own branch's version of that file, not the PR's.
 | Keys | Action |
 |---|---|
 | `-` | Open parent directory in oil.nvim (edit the filesystem as text) |
+| `g?` (in oil.nvim) | Show file explorer shortcuts |
 
 ## Optional Kotlin LSP
 

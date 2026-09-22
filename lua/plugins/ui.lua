@@ -63,6 +63,7 @@ return {
     -- (rename/delete/create by editing text, then :w). Also a required
     -- dependency of kotlin.nvim (decompiled class-file viewing).
     'stevearc/oil.nvim',
+    lazy = false, -- Claim directory buffers before netrw handles startup arguments.
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
       default_file_explorer = true,
