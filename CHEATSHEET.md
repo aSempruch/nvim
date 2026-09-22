@@ -263,7 +263,19 @@ opens your own branch's version of that file, not the PR's.
 |---|---|
 | `-` | Open parent directory in oil.nvim (edit the filesystem as text) |
 
-## Kotlin (only active in `.kt` buffers)
+## Optional Kotlin LSP
+
+Kotlin support is off in a fresh clone. To enable it on one machine, create
+`lua/config/local.lua` with:
+
+```lua
+return { kotlin_lsp = true }
+```
+
+This file is ignored by Git. Restart Neovim; Mason installs `kotlin-lsp` and
+`kotlin.nvim` loads for `.kt` buffers.
+
+When enabled, these keys work in `.kt` buffers:
 
 | Keys | Action |
 |---|---|

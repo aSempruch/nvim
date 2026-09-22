@@ -2,6 +2,17 @@
 -- plugins/kotlin.lua via kotlin.nvim, which needs to own its client
 -- lifecycle. Everything else goes through the standard
 -- mason -> mason-lspconfig -> nvim-lspconfig -> vim.lsp.enable() pipeline.
+local ensure_installed = {
+  'lua_ls', -- editing this config
+  'pyright', -- Python
+  'vtsls', 'eslint', -- dps-ui
+  'jsonls', 'yamlls', 'html', 'cssls', 'bashls', -- both repos (k8s yaml, etc.)
+}
+
+if require('config.features').kotlin_lsp then
+  table.insert(ensure_installed, 'kotlin_lsp')
+end
+
 return {
   {
     'mason-org/mason.nvim',
@@ -12,17 +23,11 @@ return {
     'mason-org/mason-lspconfig.nvim',
     dependencies = { 'mason-org/mason.nvim', 'neovim/nvim-lspconfig' },
     opts = {
-      ensure_installed = {
-        'lua_ls', -- editing this config
-        'vtsls', 'eslint', -- dps-ui
-        'jsonls', 'yamlls', 'html', 'cssls', 'bashls', -- both repos (k8s yaml, etc.)
-        'kotlin_lsp', -- kotlin.nvim starts the client itself; see automatic_enable below
-      },
+      ensure_installed = ensure_installed,
       -- kotlin.nvim configures and starts kotlin_lsp itself; if
       -- mason-lspconfig also auto-enables it, the resulting client is
       -- missing the workspace/configuration handler kotlin-lsp needs and
-      -- all inlay hints silently disappear. Install it once yourself with
-      -- `:MasonInstall kotlin-lsp`.
+      -- all inlay hints silently disappear.
       automatic_enable = { exclude = { 'kotlin_lsp' } },
     },
   },

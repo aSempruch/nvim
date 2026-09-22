@@ -1,9 +1,10 @@
 -- Requires the `kotlin-lsp` mason package (JetBrains' official Analysis-API
 -- based server, not the older community fwcd/kotlin-language-server).
--- Run `:MasonInstall kotlin-lsp` once after first launch.
+-- Mason installs it when the machine-local kotlin_lsp feature is enabled.
 return {
   {
     'AlexandrosAlexiou/kotlin.nvim',
+    enabled = require('config.features').kotlin_lsp,
     ft = { 'kotlin' },
     dependencies = {
       'mason-org/mason.nvim',
