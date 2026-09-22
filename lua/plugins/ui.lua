@@ -20,9 +20,12 @@ return {
   {
     'nvim-lualine/lualine.nvim',
     event = 'VeryLazy',
-    opts = {
-      options = { theme = 'catppuccin', icons_enabled = vim.g.have_nerd_font },
-    },
+    dependencies = { 'catppuccin' },
+    opts = function()
+      return {
+        options = { theme = require('catppuccin.utils.lualine')(), icons_enabled = vim.g.have_nerd_font },
+      }
+    end,
   },
 
   {

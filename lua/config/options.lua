@@ -14,6 +14,11 @@ end)
 vim.o.breakindent = true
 vim.o.undofile = true
 
+-- Keep indentation as spaces unless a project overrides it (e.g. EditorConfig).
+vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.softtabstop = -1
+
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
