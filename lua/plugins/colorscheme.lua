@@ -1,11 +1,12 @@
 return {
   {
-    'doums/darcula',
+    'savq/melange-nvim',
     lazy = false,
     priority = 1000,
     config = function()
       vim.o.termguicolors = true
-      vim.cmd.colorscheme 'darcula'
+      vim.o.background = 'dark'
+      vim.cmd.colorscheme 'melange'
     end,
   },
 }
