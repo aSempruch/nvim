@@ -160,8 +160,8 @@ Use like any text object: `daf` deletes a function, `vic` selects inside a class
 
 **Reviewing changes, IntelliJ-diff-viewer style:**
 
-1. `<leader>go` — opens Diffview against HEAD: a file-tree panel of every
-   changed file, plus a real side-by-side diff pane.
+1. `<leader>go` — opens Diffview against HEAD: a short file-tree panel along
+   the bottom, with the full screen width available to the side-by-side diff.
 2. Pick a file in the panel to load its diff.
 3. `]c` / `[c` — step hunk-by-hunk through that file. (Same two keys as the
    gutter navigation above — inside a diff view they fall back to vim's

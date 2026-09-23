@@ -89,7 +89,7 @@ return {
 					diff_buf_read = function() vim.opt_local.wrap = false end,
 				},
 				file_panel = {
-					win_config = { width = 80 },
+					win_config = { position = 'bottom', height = 10 },
 				},
 				keymaps = {
 					-- Match Octo's PR-review next/prev-file bindings so the same
