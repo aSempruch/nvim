@@ -396,8 +396,19 @@ return {
 			end
 
 			-- Keep both diff windows alive so Octo's diff filler, scrollbind, and
-			-- review comments still work. Give nearly all the width to one side;
-			-- the first press favors the new version, then each press flips sides.
+			-- review comments still work while one side gets nearly all the width.
+			local function widen_review_side(layout, target)
+				local left, right = layout.left_winid, layout.right_winid
+				if not (vim.api.nvim_win_is_valid(left) and vim.api.nvim_win_is_valid(right)) then return end
+				-- Wrapped lines would make a one-column side much taller and break
+				-- the visual alignment with its full-width counterpart.
+				vim.api.nvim_set_option_value('wrap', false, { win = left })
+				vim.api.nvim_set_option_value('wrap', false, { win = right })
+				vim.api.nvim_set_current_win(target)
+				vim.api.nvim_win_set_width(target, vim.o.columns)
+				layout._config_wide_diff_initialized = true
+			end
+
 			local function flip_review_diff()
 				local review = require('octo.reviews').get_current_review()
 				local layout = review and review.layout
@@ -407,13 +418,7 @@ return {
 				if not (vim.api.nvim_win_is_valid(left) and vim.api.nvim_win_is_valid(right)) then return end
 				local old_width = vim.api.nvim_win_get_width(left)
 				local new_width = vim.api.nvim_win_get_width(right)
-				local target = old_width * 2 < new_width and left or right
-				-- Wrapped lines would make a one-column side much taller and break
-				-- the visual alignment with its full-width counterpart.
-				vim.api.nvim_set_option_value('wrap', false, { win = left })
-				vim.api.nvim_set_option_value('wrap', false, { win = right })
-				vim.api.nvim_set_current_win(target)
-				vim.api.nvim_win_set_width(target, vim.o.columns)
+				widen_review_side(layout, old_width * 2 < new_width and left or right)
 			end
 
 			vim.api.nvim_create_autocmd('BufWinEnter', {
@@ -423,6 +428,18 @@ return {
 							{ buffer = args.buf, desc = 'Go to file (new tab)' })
 						vim.keymap.set('n', '<leader>d', flip_review_diff,
 							{ buffer = args.buf, desc = 'Flip wide Octo diff (new/old)' })
+						-- Octo builds the diff buffers before marking its layout ready.
+						-- Apply the default after that setup, once per review layout.
+						local tab = vim.api.nvim_get_current_tabpage()
+						vim.schedule(function()
+							if not vim.api.nvim_tabpage_is_valid(tab) or
+								vim.api.nvim_get_current_tabpage() ~= tab then return end
+							local review = require('octo.reviews').get_current_review()
+							local layout = review and review.layout
+							if layout and layout.ready and not layout._config_wide_diff_initialized then
+								widen_review_side(layout, layout.right_winid)
+							end
+						end)
 					end
 				end,
 			})
