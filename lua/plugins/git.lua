@@ -187,6 +187,34 @@ return {
 			octo_maps.next_comment, octo_maps.prev_comment =
 				require('config.repeatable').pair(octo_maps.next_comment, octo_maps.prev_comment)
 
+			-- Octo's own `gf` in a review diff always does `:edit` in the diff
+			-- pane itself. Wrap it to open in a new tab instead, leaving the
+			-- diff/review layout intact behind it -- but only inside a diff;
+			-- fall through to the original (e.g. jumping from a thread
+			-- reference in a PR body) everywhere else.
+			local octo_goto_file = octo_maps.goto_file
+			octo_maps.goto_file = function()
+				local octo_utils = require 'octo.utils'
+				local bufnr = vim.api.nvim_get_current_buf()
+				if not octo_utils.in_diff_window(bufnr) then
+					octo_goto_file()
+					return
+				end
+				local _, path = octo_utils.get_split_and_path(bufnr)
+				if not path then
+					return
+				end
+				local line = vim.api.nvim_win_get_cursor(0)[1]
+				local full_path = octo_utils.path_join { vim.fn.getcwd(), path }
+				if vim.fn.filereadable(full_path) == 0 then
+					local git_root = vim.trim(vim.fn.system 'git rev-parse --show-toplevel')
+					full_path = octo_utils.path_join { git_root, path }
+				end
+				vim.cmd 'tabnew'
+				vim.cmd('edit ' .. vim.fn.fnameescape(full_path))
+				vim.api.nvim_win_set_cursor(0, { line, 0 })
+			end
+
 			-- Octo's built-in auto-show handler runs mapped ]c inside its generated
 			-- comment buffer to position the cursor. Install the same handler with
 			-- repeat isolation so that UI bookkeeping does not replace the user's move.
@@ -371,30 +399,6 @@ return {
 				end,
 			})
 
-			-- Octo's own `gf` in a review diff always does `:edit` in the
-			-- diff pane itself. Override it to open in a new tab instead,
-			-- leaving the diff/review layout intact behind it.
-			local function goto_file_new_tab()
-				local octo_utils = require 'octo.utils'
-				local bufnr = vim.api.nvim_get_current_buf()
-				if not octo_utils.in_diff_window(bufnr) then
-					return
-				end
-				local _, path = octo_utils.get_split_and_path(bufnr)
-				if not path then
-					return
-				end
-				local line = vim.api.nvim_win_get_cursor(0)[1]
-				local full_path = octo_utils.path_join { vim.fn.getcwd(), path }
-				if vim.fn.filereadable(full_path) == 0 then
-					local git_root = vim.trim(vim.fn.system 'git rev-parse --show-toplevel')
-					full_path = octo_utils.path_join { git_root, path }
-				end
-				vim.cmd 'tabnew'
-				vim.cmd('edit ' .. vim.fn.fnameescape(full_path))
-				vim.api.nvim_win_set_cursor(0, { line, 0 })
-			end
-
 			-- Keep both diff windows alive so Octo's diff filler, scrollbind, and
 			-- review comments still work while one side gets nearly all the width.
 			local function widen_review_side(layout, target)
@@ -424,8 +428,6 @@ return {
 			vim.api.nvim_create_autocmd('BufWinEnter', {
 				callback = function(args)
 					if vim.b[args.buf].octo_diff_props then
-						vim.keymap.set('n', 'gf', goto_file_new_tab,
-							{ buffer = args.buf, desc = 'Go to file (new tab)' })
 						vim.keymap.set('n', '<leader>d', flip_review_diff,
 							{ buffer = args.buf, desc = 'Flip wide Octo diff (new/old)' })
 						-- Octo builds the diff buffers before marking its layout ready.
