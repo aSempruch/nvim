@@ -157,6 +157,7 @@ Use like any text object: `daf` deletes a function, `vic` selects inside a class
 | `<leader>gi` | List GitHub PRs (Octo) |
 | `<leader>gv` | Open the PR for the current branch (Octo) |
 | `<leader>gw` | (in an Octo PR buffer) Checkout PR into a `/tmp` worktree + start/resume review |
+| `<leader>d` | (in an Octo review diff) Widen new side, then flip between new and old |
 
 **Reviewing changes, IntelliJ-diff-viewer style:**
 
@@ -209,6 +210,11 @@ comment` on a line adds a comment, `:Octo review submit` posts it. Inside
 that diff, `gf` opens the real file in a new tab (overridden from Octo's
 default of `:edit`-ing it in the diff pane itself) so the review layout
 stays intact behind it.
+
+In Octo's review diff, `<leader>d` (`<space>d`) gives nearly the full width
+to the new version on the first press, then flips between the old and new
+versions. Both diff windows stay open and aligned; `<C-w>=` restores equal
+widths when you want the side-by-side view again.
 
 No pane-switching needed to move between files -- from the diff pane
 itself: `]q`/`[q` next/previous changed file, `]Q`/`[Q` first/last,

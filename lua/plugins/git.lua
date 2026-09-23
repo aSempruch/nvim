@@ -395,11 +395,34 @@ return {
 				vim.api.nvim_win_set_cursor(0, { line, 0 })
 			end
 
+			-- Keep both diff windows alive so Octo's diff filler, scrollbind, and
+			-- review comments still work. Give nearly all the width to one side;
+			-- the first press favors the new version, then each press flips sides.
+			local function flip_review_diff()
+				local review = require('octo.reviews').get_current_review()
+				local layout = review and review.layout
+				if not layout then return end
+
+				local left, right = layout.left_winid, layout.right_winid
+				if not (vim.api.nvim_win_is_valid(left) and vim.api.nvim_win_is_valid(right)) then return end
+				local old_width = vim.api.nvim_win_get_width(left)
+				local new_width = vim.api.nvim_win_get_width(right)
+				local target = old_width * 2 < new_width and left or right
+				-- Wrapped lines would make a one-column side much taller and break
+				-- the visual alignment with its full-width counterpart.
+				vim.api.nvim_set_option_value('wrap', false, { win = left })
+				vim.api.nvim_set_option_value('wrap', false, { win = right })
+				vim.api.nvim_set_current_win(target)
+				vim.api.nvim_win_set_width(target, vim.o.columns)
+			end
+
 			vim.api.nvim_create_autocmd('BufWinEnter', {
 				callback = function(args)
 					if vim.b[args.buf].octo_diff_props then
 						vim.keymap.set('n', 'gf', goto_file_new_tab,
 							{ buffer = args.buf, desc = 'Go to file (new tab)' })
+						vim.keymap.set('n', '<leader>d', flip_review_diff,
+							{ buffer = args.buf, desc = 'Flip wide Octo diff (new/old)' })
 					end
 				end,
 			})
