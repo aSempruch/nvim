@@ -211,8 +211,8 @@ that diff, `gf` opens the real file in a new tab (overridden from Octo's
 default of `:edit`-ing it in the diff pane itself) so the review layout
 stays intact behind it.
 
-Octo's review diff opens with the new version wide and leaves a small but
-usable old-version pane. `<leader>d` (`<space>d`) flips which side is wide.
+Octo's review diff opens with the new version wide and leaves a two-column
+strip for the old version. `<leader>d` (`<space>d`) flips which side is wide.
 Both diff windows remain open for alignment and review comments; `<C-w>=`
 restores equal widths when you want the side-by-side view again.
 

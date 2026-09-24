@@ -401,8 +401,8 @@ return {
 
 			-- Keep both diff windows alive so Octo's diff filler, scrollbind, and
 			-- review comments still work while one side gets most of the width.
-			-- Leave the inactive side wide enough for Neovim's gutter and content;
-			-- reducing it to one column caused redraw problems in this layout.
+			-- A one-column inactive side caused redraw problems; two columns
+			-- avoid that in the PR review while giving code nearly full width.
 			local wide_diff_enabled = vim.g.config_octo_wide_diff_enabled ~= false
 			local function widen_review_side(layout, target)
 				local left, right = layout.left_winid, layout.right_winid
@@ -412,7 +412,7 @@ return {
 				-- the visual alignment with its full-width counterpart.
 				vim.api.nvim_set_option_value('wrap', false, { win = left })
 				vim.api.nvim_set_option_value('wrap', false, { win = right })
-				vim.api.nvim_win_set_width(inactive, math.min(18, math.floor(vim.o.columns / 3)))
+				vim.api.nvim_win_set_width(inactive, 2)
 				vim.api.nvim_set_current_win(target)
 				-- Clear cells left behind by the large split resize before Octo's
 				-- extmarks and diff filler are drawn at their new positions.
