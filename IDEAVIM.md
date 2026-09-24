@@ -7,7 +7,7 @@ The tracked [ideavimrc](ideavimrc) is the source for `~/.ideavimrc`. IdeaVim rea
 1. Install PyCharm and clone this repository to `~/.config/nvim`.
 2. Quit PyCharm. Run `scripts/setup-ideavim.sh --dry-run` to inspect what the script will do, then run `scripts/setup-ideavim.sh`. Set `PYCHARM_APP` to the app path if it is not `/Applications/PyCharm.app`.
 3. Start PyCharm. The script installs the Marketplace plugins **IdeaVim** (`IdeaVIM`), **vim-flash** (`org.yelog.ideavim.flash`), and **Which-Key** (`eu.theblob42.idea.whichkey`). The rc's `set which-key` enables Which-Key after installation.
-4. In PyCharm's **Settings → Editor → Vim**, assign `Ctrl-D` to Vim for scrolling. This shortcut routing is an IDE setting, not part of the rc.
+4. The rc routes `Ctrl-R` and `Ctrl-D` to PyCharm in every Vim mode. With PyCharm's default macOS keymap, these run and debug the context configuration. They replace IdeaVim's redo and half-page scroll shortcuts.
 
 The script refuses to replace an existing `~/.ideavimrc`. Merge or back up that file first. JetBrains [Backup and Sync](https://www.jetbrains.com/help/idea/sharing-your-ide-settings.html) can also install enabled plugins on a new IDE instance when you sign in and sync settings, but the repository setup script does not depend on an account.
 
@@ -15,8 +15,8 @@ After editing `ideavimrc`, run `:source ~/.ideavimrc` in PyCharm to reload it.
 
 ## Run and debug
 
-`Space r` runs the selected configuration and `Space dd` starts it in the debugger.
-`Space R` opens Run Anything: type a configuration name and press Enter to run it.
+`Ctrl-R` and `Ctrl-D` use PyCharm's Run and Debug shortcuts, respectively.
+`Space r` opens Run Anything: type a configuration name and press Enter to run it.
 Hold Shift while choosing it to debug. The top-right Run widget is still useful
 when you want to see pinned configurations grouped visually; the older
 `Ctrl+Option+R` chooser does not show that grouping as clearly.

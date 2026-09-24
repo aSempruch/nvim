@@ -35,12 +35,14 @@ nmap <C-l> <C-w>l
 nmap <S-h> <Action>(PreviousTab)
 nmap <S-l> <Action>(NextTab)
 
-" Run the selected PyCharm configuration, or choose one by name.
-nmap <leader>r <Action>(Run)
-nmap <leader>R <Action>(RunAnything)
+" Let PyCharm handle its Run and Debug shortcuts in every Vim mode.
+sethandler <C-R> a:ide
+sethandler <C-D> a:ide
 
-" Start a debug session or control the active one.
-nmap <leader>dd <Action>(Debug)
+" Search and launch a run configuration by name.
+nmap <leader>r <Action>(RunAnything)
+
+" Debugger controls.
 nmap <leader>db <Action>(ToggleLineBreakpoint)
 nmap <leader>de <Action>(EvaluateExpression)
 nmap <leader>dn <Action>(StepOver)
@@ -54,10 +56,8 @@ let g:WhichKeyDesc_find = "<leader>f Find"
 let g:WhichKeyDesc_find_files = "<leader>ff Find files"
 let g:WhichKeyDesc_find_recent = "<leader>fr Recent files"
 let g:WhichKeyDesc_find_grep = "<leader>fg Find in files"
-let g:WhichKeyDesc_run = "<leader>r Run selected configuration"
+let g:WhichKeyDesc_run = "<leader>r Run configuration by name"
 let g:WhichKeyDesc_debug = "<leader>d Debug"
-let g:WhichKeyDesc_run_anything = "<leader>R Run configuration by name"
-let g:WhichKeyDesc_debug_start = "<leader>dd Debug selected configuration"
 let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle breakpoint"
 let g:WhichKeyDesc_debug_evaluate = "<leader>de Evaluate expression"
 let g:WhichKeyDesc_debug_next = "<leader>dn Step over"
