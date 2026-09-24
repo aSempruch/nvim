@@ -16,10 +16,9 @@ After editing `ideavimrc`, run `:source ~/.ideavimrc` in PyCharm to reload it.
 ## Run and debug
 
 `Space rr` runs the selected configuration and `Space dd` starts it in the debugger.
-`Space ra` opens Run Anything: type a configuration name and press Enter to run it.
-Hold Shift while choosing it to debug. The top-right Run widget is still useful
-when you want to see pinned configurations grouped visually; the older
-`Ctrl+Option+R` chooser does not show that grouping as clearly.
+`Space ra` opens PyCharm's Run configuration chooser, which lists configurations
+immediately. The top-right Run widget groups pinned configurations more clearly,
+but no editor-invokable action was verified to open that pinned presentation.
 
 During a debug session, `Space db` toggles a line breakpoint, `Space de`
 evaluates an expression, `Space dn` steps over to the next line, `Space dc`
