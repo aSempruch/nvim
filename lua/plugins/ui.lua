@@ -17,6 +17,8 @@ return {
         always_show_bufferline = true,
         show_buffer_icons = vim.g.have_nerd_font,
         separator_style = 'thin',
+        close_command = function(buf) require('config.buffers').close(buf) end,
+        right_mouse_command = function(buf) require('config.buffers').close(buf) end,
       },
     },
   },
@@ -27,6 +29,7 @@ return {
     opts = {
       spec = {
         { '<leader>f', group = 'Find' },
+        { '<leader>b', group = 'Buffers' },
         { '<leader>g', group = 'Git' },
         { '<leader>h', group = 'Harpoon' },
         { '<leader>x', group = 'Diagnostics/Trouble' },

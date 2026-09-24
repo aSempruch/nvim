@@ -1,0 +1,23 @@
+-- Run with the installed config:
+-- nvim --headless -i NONE '+luafile tests/buffer_windows.lua' '+qa!'
+require('lazy').load { plugins = { 'neotest', 'mini.nvim', 'bufferline.nvim' } }
+local buffers = require('config.buffers')
+local nt = require('neotest')
+vim.cmd.enew()
+local editing = vim.api.nvim_get_current_win()
+local buf = vim.api.nvim_get_current_buf()
+nt.summary.open()
+assert(#vim.api.nvim_tabpage_list_wins(0) == 2)
+buffers.close(buf)
+assert(vim.api.nvim_win_is_valid(editing), 'Closing file destroyed editing window')
+assert(#vim.api.nvim_tabpage_list_wins(0) == 2)
+vim.api.nvim_win_close(editing, true)
+assert(#vim.api.nvim_tabpage_list_wins(0) == 1)
+assert(vim.bo.filetype == 'neotest-summary')
+buffers.toggle_test_summary()
+assert(vim.wait(2000, function() return #vim.api.nvim_tabpage_list_wins(0) == 1 and vim.bo.filetype ~= 'neotest-summary' end))
+buffers.toggle_test_summary()
+assert(vim.wait(2000, function() return #vim.api.nvim_tabpage_list_wins(0) == 2 end))
+buffers.toggle_test_summary()
+assert(vim.wait(2000, function() return #vim.api.nvim_tabpage_list_wins(0) == 1 end))
+print('PASS: closing buffers preserves splits; last-window summary recovers and reopens')

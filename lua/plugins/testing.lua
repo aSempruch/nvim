@@ -22,7 +22,7 @@ return {
         neotest.summary.open()
       end, desc = 'Run test suite (working directory)' },
       { '<leader>tl', function() require('neotest').run.run_last() end, desc = 'Run last test' },
-      { '<leader>ts', function() require('neotest').summary.toggle() end, desc = 'Toggle test results' },
+      { '<leader>ts', function() require('config.buffers').toggle_test_summary() end, desc = 'Toggle test results' },
       { '<leader>to', function() require('neotest').output.open { enter = true } end, desc = 'Show test output' },
       { '<leader>tO', function() require('neotest').output_panel.toggle() end, desc = 'Toggle test output panel' },
       { '<leader>tx', function() require('neotest').run.stop() end, desc = 'Stop test' },

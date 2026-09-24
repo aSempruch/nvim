@@ -9,6 +9,8 @@
 
 local map = vim.keymap.set
 
+map('n', '<leader>bd', function() require('config.buffers').close() end, { desc = 'Close buffer, keep splits' })
+
 map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlight' })
 
 -- gd isn't one of the built-in defaults (gd is kept as plain-vim "goto
