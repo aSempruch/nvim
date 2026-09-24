@@ -52,7 +52,6 @@ nmap <leader>dr <Action>(Resume)
 
 " Show available leader mappings after Space.
 set which-key
-set timeoutlen=3000
 let g:WhichKeyDesc_find = "<leader>f Find"
 let g:WhichKeyDesc_find_files = "<leader>ff Find files"
 let g:WhichKeyDesc_find_recent = "<leader>fr Recent files"
