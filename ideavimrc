@@ -10,6 +10,9 @@ nmap <leader>ff <Action>(GotoFile)
 nmap <leader>fr <Action>(RecentFiles)
 nmap <leader>fg <Action>(FindInPath)
 
+" Find references to the symbol under the cursor.
+nmap gr <Action>(FindUsages)
+
 " Match the Flash mappings in ~/.config/nvim/lua/plugins/navigation.lua.
 " Requires the vim-flash JetBrains plugin.
 nmap s <Action>(flash.search)
