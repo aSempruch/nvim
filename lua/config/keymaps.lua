@@ -15,6 +15,21 @@ map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlight' })
 -- local declaration"), so it's worth reclaiming for LSP definition.
 map('n', 'gd', vim.lsp.buf.definition, { desc = 'Goto Definition' })
 
+-- Keep the caller visible while exploring a definition alongside it.
+map('n', 'gD', function()
+  vim.cmd.vsplit()
+  vim.lsp.buf.definition()
+end, { desc = 'Goto Definition in vertical split' })
+
+map('n', '<leader><Tab>', function()
+  local alternate = vim.fn.bufnr('#')
+  if alternate > 0 and vim.api.nvim_buf_is_valid(alternate) then
+    vim.cmd.buffer(alternate)
+  else
+    vim.notify('No previous file to switch to', vim.log.levels.INFO)
+  end
+end, { desc = 'Switch to previous file' })
+
 -- A comfier alias for the diagnostic float than the default <C-w>d.
 map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic under cursor' })
 

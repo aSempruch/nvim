@@ -2,6 +2,26 @@ return {
   { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font, opts = {} },
 
   {
+    -- File tabs represent buffers; native tabpages remain window layouts.
+    'akinsho/bufferline.nvim',
+    version = '*',
+    event = 'VeryLazy',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    keys = {
+      { '<S-h>', '<cmd>BufferLineCyclePrev<CR>', desc = 'Previous file' },
+      { '<S-l>', '<cmd>BufferLineCycleNext<CR>', desc = 'Next file' },
+    },
+    opts = {
+      options = {
+        mode = 'buffers',
+        always_show_bufferline = true,
+        show_buffer_icons = vim.g.have_nerd_font,
+        separator_style = 'thin',
+      },
+    },
+  },
+
+  {
     'folke/which-key.nvim',
     event = 'VeryLazy',
     opts = {
