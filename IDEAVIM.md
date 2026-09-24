@@ -12,3 +12,21 @@ The tracked [ideavimrc](ideavimrc) is the source for `~/.ideavimrc`. IdeaVim rea
 The script refuses to replace an existing `~/.ideavimrc`. Merge or back up that file first. JetBrains [Backup and Sync](https://www.jetbrains.com/help/idea/sharing-your-ide-settings.html) can also install enabled plugins on a new IDE instance when you sign in and sync settings, but the repository setup script does not depend on an account.
 
 After editing `ideavimrc`, run `:source ~/.ideavimrc` in PyCharm to reload it.
+
+## Run and debug
+
+`Space r` runs the selected configuration and `Space d` starts it in the debugger.
+`Space R` opens Run Anything: type a configuration name and press Enter to run it.
+Hold Shift while choosing it to debug. The top-right Run widget is still useful
+when you want to see pinned configurations grouped visually; the older
+`Ctrl+Option+R` chooser does not show that grouping as clearly.
+
+During a debug session, `Space xb` toggles a line breakpoint, `Space xe`
+evaluates an expression, `Space xn` steps over to the next line, `Space xc`
+runs to the cursor, and `Space xr` resumes to the next breakpoint.
+
+## Editor splits
+
+To move the current file into a new right-hand split without changing `vs`,
+use **Find Action** (`Shift+Command+A`) and choose **Split and Move Right**.
+The corresponding IdeaVim command is `:action MoveTabRight`.
