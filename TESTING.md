@@ -4,6 +4,10 @@ Neotest supports Python (pytest, or unittest when pytest is unavailable) and
 Java/Kotlin JUnit tests through Gradle. Open Neovim in the project/module root.
 Python uses the project's virtual environment; provision it with `uv sync` in
 uv projects. Gradle uses the project wrapper when present, otherwise `gradle`.
+Projects with `uv.lock` run Python through `uv run --project <root> python`.
+For unittest suites with a non-package `tests/` directory, running the project
+root starts discovery in `tests/`, matching `unittest discover -s tests`.
+`Space t a` opens the results panel as it starts the suite.
 
 | Keys | Action |
 | --- | --- |

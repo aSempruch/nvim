@@ -16,7 +16,11 @@ return {
     keys = {
       { '<leader>tt', function() require('neotest').run.run() end, desc = 'Run nearest test' },
       { '<leader>tf', function() require('neotest').run.run(vim.fn.expand('%:p')) end, desc = 'Run test file' },
-      { '<leader>ta', function() require('neotest').run.run(vim.fn.getcwd()) end, desc = 'Run test suite (working directory)' },
+      { '<leader>ta', function()
+        local neotest = require 'neotest'
+        neotest.run.run(vim.fn.getcwd())
+        neotest.summary.open()
+      end, desc = 'Run test suite (working directory)' },
       { '<leader>tl', function() require('neotest').run.run_last() end, desc = 'Run last test' },
       { '<leader>ts', function() require('neotest').summary.toggle() end, desc = 'Toggle test results' },
       { '<leader>to', function() require('neotest').output.open { enter = true } end, desc = 'Show test output' },
@@ -30,7 +34,7 @@ return {
         adapters = {
           -- Detect the project's virtualenv and prefer pytest when installed;
           -- fall back to unittest without changing the project's dependencies.
-          require('neotest-python') {},
+          require('config.python_tests').adapter(),
           -- Java/Kotlin JUnit tests run through the project's Gradle build.
           require('config.gradle_tests').adapter(),
         },
