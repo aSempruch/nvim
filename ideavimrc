@@ -53,24 +53,24 @@ nmap <leader>dr <Action>(Resume)
 " Show available leader mappings after Space.
 set which-key
 set notimeout
-let g:WhichKeyDesc_find = "<leader>f Find"
-let g:WhichKeyDesc_find_files = "<leader>ff Find files"
-let g:WhichKeyDesc_find_recent = "<leader>fr Recent files"
-let g:WhichKeyDesc_find_grep = "<leader>fg Find in files"
-let g:WhichKeyDesc_run = "<leader>r Run"
-let g:WhichKeyDesc_run_selected = "<leader>rr Run selected configuration"
-let g:WhichKeyDesc_run_choose = "<leader>ra Choose run configuration"
-let g:WhichKeyDesc_debug = "<leader>d Debug"
-let g:WhichKeyDesc_debug_start = "<leader>dd Debug selected configuration"
-let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle breakpoint"
-let g:WhichKeyDesc_debug_evaluate = "<leader>de Evaluate expression"
-let g:WhichKeyDesc_debug_next = "<leader>dn Step over"
-let g:WhichKeyDesc_debug_cursor = "<leader>dc Run to cursor"
-let g:WhichKeyDesc_debug_resume = "<leader>dr Resume to next breakpoint"
+let g:WhichKeyDesc_find = "<leader>f ⌕ Find"
+let g:WhichKeyDesc_find_files = "<leader>ff ▣ Find files"
+let g:WhichKeyDesc_find_recent = "<leader>fr ◷ Recent files"
+let g:WhichKeyDesc_find_grep = "<leader>fg ⌕ Find in files"
+let g:WhichKeyDesc_run = "<leader>r ▶ Run"
+let g:WhichKeyDesc_run_selected = "<leader>rr ▶ Run selected configuration"
+let g:WhichKeyDesc_run_choose = "<leader>ra ☰ Choose run configuration"
+let g:WhichKeyDesc_debug = "<leader>d 🐞 Debug"
+let g:WhichKeyDesc_debug_start = "<leader>dd 🐞 Debug selected configuration"
+let g:WhichKeyDesc_debug_breakpoint = "<leader>db ● Toggle breakpoint"
+let g:WhichKeyDesc_debug_evaluate = "<leader>de ƒ Evaluate expression"
+let g:WhichKeyDesc_debug_next = "<leader>dn ↷ Step over"
+let g:WhichKeyDesc_debug_cursor = "<leader>dc ⇥ Run to cursor"
+let g:WhichKeyDesc_debug_resume = "<leader>dr ▶ Resume to next breakpoint"
 
 " Git blame annotations and branch selection.
 nmap <leader>gb <Action>(Annotate)
 nmap <leader>gB <Action>(Git.Branches)
-let g:WhichKeyDesc_git = "<leader>g Git"
-let g:WhichKeyDesc_git_blame = "<leader>gb Git blame annotations"
-let g:WhichKeyDesc_git_branches = "<leader>gB Git branches"
+let g:WhichKeyDesc_git = "<leader>g ⎇ Git"
+let g:WhichKeyDesc_git_blame = "<leader>gb ≡ Git blame annotations"
+let g:WhichKeyDesc_git_branches = "<leader>gB ⎇ Git branches"
