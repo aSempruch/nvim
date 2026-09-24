@@ -400,19 +400,23 @@ return {
 			})
 
 			-- Keep both diff windows alive so Octo's diff filler, scrollbind, and
-			-- review comments still work while one side gets nearly all the width.
-			-- Disabled by default while evaluating other review layouts. Set the
-			-- global before Octo loads to retry this view without restoring code.
-			local wide_diff_enabled = vim.g.config_octo_wide_diff_enabled == true
+			-- review comments still work while one side gets most of the width.
+			-- Leave the inactive side wide enough for Neovim's gutter and content;
+			-- reducing it to one column caused redraw problems in this layout.
+			local wide_diff_enabled = vim.g.config_octo_wide_diff_enabled ~= false
 			local function widen_review_side(layout, target)
 				local left, right = layout.left_winid, layout.right_winid
 				if not (vim.api.nvim_win_is_valid(left) and vim.api.nvim_win_is_valid(right)) then return end
-				-- Wrapped lines would make a one-column side much taller and break
+				local inactive = target == left and right or left
+				-- Wrapped lines would make the narrow side much taller and break
 				-- the visual alignment with its full-width counterpart.
 				vim.api.nvim_set_option_value('wrap', false, { win = left })
 				vim.api.nvim_set_option_value('wrap', false, { win = right })
+				vim.api.nvim_win_set_width(inactive, math.min(18, math.floor(vim.o.columns / 3)))
 				vim.api.nvim_set_current_win(target)
-				vim.api.nvim_win_set_width(target, vim.o.columns)
+				-- Clear cells left behind by the large split resize before Octo's
+				-- extmarks and diff filler are drawn at their new positions.
+				vim.cmd 'redraw!'
 				layout._config_wide_diff_initialized = true
 			end
 
@@ -425,7 +429,7 @@ return {
 				if not (vim.api.nvim_win_is_valid(left) and vim.api.nvim_win_is_valid(right)) then return end
 				local old_width = vim.api.nvim_win_get_width(left)
 				local new_width = vim.api.nvim_win_get_width(right)
-				widen_review_side(layout, old_width * 2 < new_width and left or right)
+				widen_review_side(layout, old_width + 2 < new_width and left or right)
 			end
 
 			vim.api.nvim_create_autocmd('BufWinEnter', {

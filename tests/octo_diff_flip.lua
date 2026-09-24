@@ -1,4 +1,3 @@
-vim.g.config_octo_wide_diff_enabled = true
 require('lazy').load { plugins = { 'octo.nvim' }, wait = true }
 
 vim.cmd 'tabnew'
@@ -32,6 +31,7 @@ layout.ready = true
 assert(vim.wait(1000, function() return layout._config_wide_diff_initialized end))
 assert(vim.api.nvim_get_current_win() == right)
 assert(vim.api.nvim_win_get_width(right) > vim.api.nvim_win_get_width(left))
+assert(vim.api.nvim_win_get_width(left) >= 16)
 
 local flip = vim.fn.maparg('<leader>d', 'n', false, true).callback
 assert(type(flip) == 'function', 'Octo diff flip key was not installed')
@@ -39,6 +39,7 @@ assert(type(flip) == 'function', 'Octo diff flip key was not installed')
 flip()
 assert(vim.api.nvim_get_current_win() == left)
 assert(vim.api.nvim_win_get_width(left) > vim.api.nvim_win_get_width(right))
+assert(vim.api.nvim_win_get_width(right) >= 16)
 vim.api.nvim_exec_autocmds('BufWinEnter', { buffer = new })
 vim.wait(20)
 assert(vim.api.nvim_win_get_width(left) > vim.api.nvim_win_get_width(right))
@@ -50,5 +51,7 @@ assert(vim.api.nvim_get_option_value('scrollbind', { win = left }))
 assert(vim.api.nvim_get_option_value('scrollbind', { win = right }))
 assert(not vim.api.nvim_get_option_value('wrap', { win = left }))
 assert(not vim.api.nvim_get_option_value('wrap', { win = right }))
+vim.cmd 'wincmd ='
+assert(math.abs(vim.api.nvim_win_get_width(left) - vim.api.nvim_win_get_width(right)) <= 1)
 
 print 'Octo diff flip: OK'
