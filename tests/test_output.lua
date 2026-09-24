@@ -38,5 +38,41 @@ vim.api.nvim_feedkeys('q', 'xt', false)
 assert(not vim.api.nvim_win_is_valid(win), 'q did not close output')
 assert(#vim.api.nvim_tabpage_list_wins(0) == 2)
 show('first', 'FIRST TEST OUTPUT', 'SECOND TEST OUTPUT')
+local listeners = {}
+require('config.test_output').consumer { listeners = listeners }
+local function complete(id, partial)
+  local done
+  require('nio').run(function()
+    listeners.results('fixture', { [id] = { output = paths[id == 'first' and 1 or 2] } }, partial)
+    done = true
+  end)
+  assert(vim.wait(3000, function() return done end, 20))
+end
+local function output_window()
+  for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.bo[vim.api.nvim_win_get_buf(w)].filetype == 'neotest-output' then return w end
+  end
+end
+local function output_text()
+  local w = output_window()
+  return w and table.concat(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_buf(w), 0, -1, false), '\n') or ''
+end
+vim.cmd.wincmd('k')
+local source_window = vim.api.nvim_get_current_win()
+listeners.run('fixture', 'second')
+complete('second', true)
+assert(output_text():find('FIRST TEST OUTPUT', 1, true), 'Partial result replaced output')
+complete('second', false)
+assert(vim.wait(3000, function() return output_text():find('SECOND TEST OUTPUT', 1, true) end, 20))
+assert(vim.api.nvim_get_current_win() == source_window, 'Automatic refresh stole focus')
+assert(#vim.api.nvim_tabpage_list_wins(0) == 3)
+-- A late result from an older run must not replace the latest run's output.
+complete('first', false)
+assert(output_text():find('SECOND TEST OUTPUT', 1, true))
+vim.api.nvim_set_current_win(output_window())
+vim.api.nvim_feedkeys('q', 'xt', false)
+listeners.run('fixture', 'first')
+complete('first', false)
+assert(not output_window(), 'Completion reopened a closed pane')
 for _, path in ipairs(paths) do vim.fn.delete(path) end
-print('PASS: bottom output split, selected-test refresh, q, and reopening')
+print('PASS: selected output, automatic refresh, preserved focus, partial/stale results, and closed pane')

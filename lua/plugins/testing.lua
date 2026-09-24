@@ -32,6 +32,7 @@ return {
     opts = function()
       return {
         output = { open_on_run = false },
+        consumers = { refresh_output = require('config.test_output').consumer },
         adapters = {
           -- Detect the project's virtualenv and prefer pytest when installed;
           -- fall back to unittest without changing the project's dependencies.

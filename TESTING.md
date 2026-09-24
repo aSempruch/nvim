@@ -25,6 +25,8 @@ In the results tree, `i` jumps to a test, `o` shows output, and `r` runs it.
 `o` / `O` in the results tree and `Space t o` open output in a bottom split.
 Use `Ctrl-j` / `Ctrl-k` to move between code and output, and `q` to close it.
 Output opens on request rather than automatically appearing after failures.
+While open, it refreshes when the latest test run finishes, preserving focus.
+Closing it with `q` keeps it closed until you request output again.
 Close file buffers with `Space b d` or the buffer bar's close button to preserve
 the editing window alongside the results. `Space t s` can also recover when the
 results panel is the last window: it creates an empty editing window before
