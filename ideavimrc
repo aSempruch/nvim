@@ -17,6 +17,8 @@ nmap gr <Action>(FindUsages)
 " Requires the vim-flash JetBrains plugin.
 nmap s <Action>(flash.search)
 xmap s <Action>(flash.search)
+nmap f <Action>(flash.find)
+xmap f <Action>(flash.find)
 nmap S <Action>(flash.treesitter)
 xmap S <Action>(flash.treesitter)
 omap r <Action>(flash.remote)
