@@ -12,6 +12,8 @@ The tracked [ideavimrc](ideavimrc) is the source for `~/.ideavimrc`. IdeaVim rea
 The script refuses to replace an existing `~/.ideavimrc`. Merge or back up that file first. JetBrains [Backup and Sync](https://www.jetbrains.com/help/idea/sharing-your-ide-settings.html) can also install enabled plugins on a new IDE instance when you sign in and sync settings, but the repository setup script does not depend on an account.
 
 After editing `ideavimrc`, run `:source ~/.ideavimrc` in PyCharm to reload it.
+The rc disables the key-sequence timeout, so an unfinished Space mapping waits
+for the next key or Escape.
 
 ## Run and debug
 
