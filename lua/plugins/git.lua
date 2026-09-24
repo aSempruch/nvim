@@ -397,6 +397,9 @@ return {
 
 			-- Keep both diff windows alive so Octo's diff filler, scrollbind, and
 			-- review comments still work while one side gets nearly all the width.
+			-- Disabled by default while evaluating other review layouts. Set the
+			-- global before Octo loads to retry this view without restoring code.
+			local wide_diff_enabled = vim.g.config_octo_wide_diff_enabled == true
 			local function widen_review_side(layout, target)
 				local left, right = layout.left_winid, layout.right_winid
 				if not (vim.api.nvim_win_is_valid(left) and vim.api.nvim_win_is_valid(right)) then return end
@@ -426,8 +429,10 @@ return {
 					if vim.b[args.buf].octo_diff_props then
 						vim.keymap.set('n', 'gf', goto_file_new_tab,
 							{ buffer = args.buf, desc = 'Go to file (new tab)' })
-						vim.keymap.set('n', '<leader>d', flip_review_diff,
-							{ buffer = args.buf, desc = 'Flip wide Octo diff (new/old)' })
+						if wide_diff_enabled then
+							vim.keymap.set('n', '<leader>d', flip_review_diff,
+								{ buffer = args.buf, desc = 'Flip wide Octo diff (new/old)' })
+						end
 						-- Octo builds the diff buffers before marking its layout ready.
 						-- Apply the default after that setup, once per review layout.
 						local tab = vim.api.nvim_get_current_tabpage()
@@ -436,7 +441,8 @@ return {
 								vim.api.nvim_get_current_tabpage() ~= tab then return end
 							local review = require('octo.reviews').get_current_review()
 							local layout = review and review.layout
-							if layout and layout.ready and not layout._config_wide_diff_initialized then
+							if wide_diff_enabled and layout and layout.ready and
+								not layout._config_wide_diff_initialized then
 								widen_review_side(layout, layout.right_winid)
 							end
 						end)

@@ -1,3 +1,4 @@
+vim.g.config_octo_wide_diff_enabled = true
 require('lazy').load { plugins = { 'octo.nvim' }, wait = true }
 
 vim.cmd 'tabnew'
