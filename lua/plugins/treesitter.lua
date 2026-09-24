@@ -11,6 +11,7 @@
 -- it back yourself (`require('nvim-treesitter').install{'gitcommit'}`) if
 -- yours can handle it.
 local parsers = {
+  'python',
   'kotlin', 'java', 'groovy',
   'typescript', 'tsx', 'javascript', 'json', 'html', 'css',
   'yaml', 'bash', 'dockerfile', 'diff',

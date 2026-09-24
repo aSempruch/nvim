@@ -32,6 +32,7 @@ return {
         { '<leader>x', group = 'Diagnostics/Trouble' },
         { '<leader>c', group = 'Code' },
         { '<leader>u', group = 'UI toggles' },
+        { '<leader>t', group = 'Tests' },
         require('config.features').kotlin_lsp and { '<leader>k', group = 'Kotlin' } or nil,
       },
     },
