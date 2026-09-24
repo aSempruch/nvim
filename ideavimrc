@@ -35,18 +35,17 @@ nmap <C-l> <C-w>l
 nmap <S-h> <Action>(PreviousTab)
 nmap <S-l> <Action>(NextTab)
 
-" Run or debug the selected PyCharm configuration.
+" Run the selected PyCharm configuration, or choose one by name.
 nmap <leader>r <Action>(Run)
-nmap <leader>d <Action>(Debug)
-" Search and launch a run configuration by name.
 nmap <leader>R <Action>(RunAnything)
 
-" Debugger controls. Keep <leader>d immediate for starting a session.
-nmap <leader>xb <Action>(ToggleLineBreakpoint)
-nmap <leader>xe <Action>(EvaluateExpression)
-nmap <leader>xn <Action>(StepOver)
-nmap <leader>xc <Action>(RunToCursor)
-nmap <leader>xr <Action>(Resume)
+" Start a debug session or control the active one.
+nmap <leader>dd <Action>(Debug)
+nmap <leader>db <Action>(ToggleLineBreakpoint)
+nmap <leader>de <Action>(EvaluateExpression)
+nmap <leader>dn <Action>(StepOver)
+nmap <leader>dc <Action>(RunToCursor)
+nmap <leader>dr <Action>(Resume)
 
 " Show available leader mappings after Space.
 set which-key
@@ -56,14 +55,14 @@ let g:WhichKeyDesc_find_files = "<leader>ff Find files"
 let g:WhichKeyDesc_find_recent = "<leader>fr Recent files"
 let g:WhichKeyDesc_find_grep = "<leader>fg Find in files"
 let g:WhichKeyDesc_run = "<leader>r Run selected configuration"
-let g:WhichKeyDesc_debug = "<leader>d Debug selected configuration"
+let g:WhichKeyDesc_debug = "<leader>d Debug"
 let g:WhichKeyDesc_run_anything = "<leader>R Run configuration by name"
-let g:WhichKeyDesc_debug_controls = "<leader>x Debug controls"
-let g:WhichKeyDesc_debug_breakpoint = "<leader>xb Toggle breakpoint"
-let g:WhichKeyDesc_debug_evaluate = "<leader>xe Evaluate expression"
-let g:WhichKeyDesc_debug_next = "<leader>xn Step over"
-let g:WhichKeyDesc_debug_cursor = "<leader>xc Run to cursor"
-let g:WhichKeyDesc_debug_resume = "<leader>xr Resume to next breakpoint"
+let g:WhichKeyDesc_debug_start = "<leader>dd Debug selected configuration"
+let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle breakpoint"
+let g:WhichKeyDesc_debug_evaluate = "<leader>de Evaluate expression"
+let g:WhichKeyDesc_debug_next = "<leader>dn Step over"
+let g:WhichKeyDesc_debug_cursor = "<leader>dc Run to cursor"
+let g:WhichKeyDesc_debug_resume = "<leader>dr Resume to next breakpoint"
 
 " Git blame annotations and branch selection.
 nmap <leader>gb <Action>(Annotate)

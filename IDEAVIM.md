@@ -15,15 +15,15 @@ After editing `ideavimrc`, run `:source ~/.ideavimrc` in PyCharm to reload it.
 
 ## Run and debug
 
-`Space r` runs the selected configuration and `Space d` starts it in the debugger.
+`Space r` runs the selected configuration and `Space dd` starts it in the debugger.
 `Space R` opens Run Anything: type a configuration name and press Enter to run it.
 Hold Shift while choosing it to debug. The top-right Run widget is still useful
 when you want to see pinned configurations grouped visually; the older
 `Ctrl+Option+R` chooser does not show that grouping as clearly.
 
-During a debug session, `Space xb` toggles a line breakpoint, `Space xe`
-evaluates an expression, `Space xn` steps over to the next line, `Space xc`
-runs to the cursor, and `Space xr` resumes to the next breakpoint.
+During a debug session, `Space db` toggles a line breakpoint, `Space de`
+evaluates an expression, `Space dn` steps over to the next line, `Space dc`
+runs to the cursor, and `Space dr` resumes to the next breakpoint.
 
 ## Editor splits
 
