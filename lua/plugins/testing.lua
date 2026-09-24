@@ -31,6 +31,7 @@ return {
     },
     opts = function()
       return {
+        output = { open_on_run = false },
         adapters = {
           -- Detect the project's virtualenv and prefer pytest when installed;
           -- fall back to unittest without changing the project's dependencies.
@@ -39,6 +40,11 @@ return {
           require('config.gradle_tests').adapter(),
         },
       }
+    end,
+    config = function(_, opts)
+      local neotest = require 'neotest'
+      neotest.setup(opts)
+      require('config.test_output').setup(neotest)
     end,
   },
 }
