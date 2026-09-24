@@ -16,11 +16,7 @@ return {
     keys = {
       { '<leader>tt', function() require('neotest').run.run() end, desc = 'Run nearest test' },
       { '<leader>tf', function() require('neotest').run.run(vim.fn.expand('%:p')) end, desc = 'Run test file' },
-      { '<leader>ta', function()
-        local neotest = require 'neotest'
-        neotest.run.run(vim.fn.getcwd())
-        neotest.summary.open()
-      end, desc = 'Run test suite (working directory)' },
+      { '<leader>ta', function() require('config.test_suite').run() end, desc = 'Run test suite (working directory)' },
       { '<leader>tl', function() require('neotest').run.run_last() end, desc = 'Run last test' },
       { '<leader>ts', function() require('config.buffers').toggle_test_summary() end, desc = 'Toggle test results' },
       { '<leader>to', function() require('neotest').output.open { enter = true } end, desc = 'Show test output' },

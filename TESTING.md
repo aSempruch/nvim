@@ -8,6 +8,9 @@ Projects with `uv.lock` run Python through `uv run --project <root> python`.
 For unittest suites with a non-package `tests/` directory, running the project
 root starts discovery in `tests/`, matching `unittest discover -s tests`.
 `Space t a` opens the results panel as it starts the suite.
+When started from an Oil directory view, it opens the first Python test file
+so neotest can discover the project before running the suite. In the results
+panel, press `e` to expand all groups or Enter to expand the selected group.
 
 | Keys | Action |
 | --- | --- |
