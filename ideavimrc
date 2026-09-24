@@ -35,9 +35,13 @@ nmap <C-l> <C-w>l
 nmap <S-h> <Action>(PreviousTab)
 nmap <S-l> <Action>(NextTab)
 
-" Let PyCharm handle its Run and Debug shortcuts in every Vim mode.
-sethandler <C-R> a:ide
-sethandler <C-D> a:ide
+" Keep Vim redo and half-page scrolling; use Option for Run and Debug.
+sethandler <C-r> n:vim
+sethandler <C-d> n:vim
+sethandler <A-r> n:vim
+sethandler <A-d> n:vim
+nmap <A-r> <Action>(Run)
+nmap <A-d> <Action>(Debug)
 
 " Search and launch a run configuration by name.
 nmap <leader>r <Action>(RunAnything)
