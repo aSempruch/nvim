@@ -14,7 +14,7 @@ The script refuses to replace an existing `~/.ideavimrc`. Merge or back up that 
 After editing `ideavimrc`, run `:source ~/.ideavimrc` in PyCharm to reload it.
 The rc disables the key-sequence timeout, so an unfinished Space mapping waits
 for the next key or Escape.
-Which-Key labels use Nerd Font Codicon glyphs alongside text. The rc sets the
+Which-Key labels use Nerd Font glyphs alongside text. The rc sets the
 popup font to `JetBrainsMono Nerd Font`, which must be installed on a new Mac.
 The installed plugin does not show IntelliJ action icons directly.
 
