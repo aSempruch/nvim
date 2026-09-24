@@ -22,6 +22,7 @@ root starts discovery in `tests/`, matching `unittest discover -s tests`.
 | `]t` / `[t` | Next/previous failed test in current file |
 
 In the results tree, `i` jumps to a test, `o` shows output, and `r` runs it.
+Press `q` in the test output popup to close it.
 Close file buffers with `Space b d` or the buffer bar's close button to preserve
 the editing window alongside the results. `Space t s` can also recover when the
 results panel is the last window: it creates an empty editing window before

@@ -1,3 +1,17 @@
+-- Neotest output uses a terminal buffer but does not provide a q mapping.
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'neotest-output',
+  desc = 'Close test output with q',
+  group = vim.api.nvim_create_augroup('config-test-output', { clear = true }),
+  callback = function(args)
+    vim.keymap.set({ 'n', 't' }, 'q', '<cmd>close<CR>', {
+      buffer = args.buf,
+      silent = true,
+      desc = 'Close test output',
+    })
+  end,
+})
+
 -- Flash the yanked region briefly, like most other editors do.
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight yanked text',
