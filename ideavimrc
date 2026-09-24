@@ -35,18 +35,15 @@ nmap <C-l> <C-w>l
 nmap <S-h> <Action>(PreviousTab)
 nmap <S-l> <Action>(NextTab)
 
-" Keep Vim redo and half-page scrolling; use Option for Run and Debug.
-sethandler <C-r> n:vim
+" Keep Ctrl-D as Vim's half-page scroll in normal mode.
 sethandler <C-d> n:vim
-sethandler <A-r> n:vim
-sethandler <A-d> n:vim
-nmap <A-r> <Action>(Run)
-nmap <A-d> <Action>(Debug)
 
-" Search and launch a run configuration by name.
-nmap <leader>r <Action>(RunAnything)
+" Run or choose a configuration by name.
+nmap <leader>rr <Action>(Run)
+nmap <leader>ra <Action>(RunAnything)
 
-" Debugger controls.
+" Start or control a debug session.
+nmap <leader>dd <Action>(Debug)
 nmap <leader>db <Action>(ToggleLineBreakpoint)
 nmap <leader>de <Action>(EvaluateExpression)
 nmap <leader>dn <Action>(StepOver)
@@ -60,8 +57,11 @@ let g:WhichKeyDesc_find = "<leader>f Find"
 let g:WhichKeyDesc_find_files = "<leader>ff Find files"
 let g:WhichKeyDesc_find_recent = "<leader>fr Recent files"
 let g:WhichKeyDesc_find_grep = "<leader>fg Find in files"
-let g:WhichKeyDesc_run = "<leader>r Run configuration by name"
+let g:WhichKeyDesc_run = "<leader>r Run"
+let g:WhichKeyDesc_run_selected = "<leader>rr Run selected configuration"
+let g:WhichKeyDesc_run_anything = "<leader>ra Run configuration by name"
 let g:WhichKeyDesc_debug = "<leader>d Debug"
+let g:WhichKeyDesc_debug_start = "<leader>dd Debug selected configuration"
 let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle breakpoint"
 let g:WhichKeyDesc_debug_evaluate = "<leader>de Evaluate expression"
 let g:WhichKeyDesc_debug_next = "<leader>dn Step over"
