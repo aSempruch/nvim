@@ -408,12 +408,17 @@ return {
 				local left, right = layout.left_winid, layout.right_winid
 				if not (vim.api.nvim_win_is_valid(left) and vim.api.nvim_win_is_valid(right)) then return end
 				local inactive = target == left and right or left
+				local target_cursor = vim.api.nvim_win_get_cursor(target)
 				-- Wrapped lines would make the narrow side much taller and break
 				-- the visual alignment with its full-width counterpart.
 				vim.api.nvim_set_option_value('wrap', false, { win = left })
 				vim.api.nvim_set_option_value('wrap', false, { win = right })
 				vim.api.nvim_win_set_width(inactive, 2)
 				vim.api.nvim_set_current_win(target)
+				-- Entering a diff window can move its cursor to a nearby closed fold.
+				-- Restore the line tracked by cursorbind and reveal it before redraw.
+				vim.api.nvim_win_set_cursor(target, target_cursor)
+				vim.cmd.normal { 'zv', bang = true }
 				-- Clear cells left behind by the large split resize before Octo's
 				-- extmarks and diff filler are drawn at their new positions.
 				vim.cmd 'redraw!'
