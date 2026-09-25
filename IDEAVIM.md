@@ -26,8 +26,9 @@ immediately. The top-right Run widget groups pinned configurations more clearly,
 but no editor-invokable action was verified to open that pinned presentation.
 
 During a debug session, `Space db` toggles a line breakpoint, `Space de`
-evaluates an expression, `Space dn` steps over to the next line, `Space dc`
-runs to the cursor, and `Space dr` resumes to the next breakpoint.
+evaluates an expression, `Space dn` steps over, `Space di` steps into, and
+`Space do` steps out. `Space dc` runs to the cursor, and `Space dr` resumes to
+the next breakpoint.
 
 ## Editor splits
 
