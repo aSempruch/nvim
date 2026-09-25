@@ -11,7 +11,7 @@ map <leader>ff <Action>(GotoFile)
 map <leader>fc <Action>(GotoClass)
 map <leader>fr <Action>(RecentFiles)
 map <leader>fg <Action>(FindInPath)
-map <leader>s <Action>(GotoSymbol)
+map <leader>fs <Action>(GotoSymbol)
 
 " Find references to the symbol under the cursor.
 nmap gr <Action>(FindUsages)
@@ -80,7 +80,7 @@ let g:WhichKeyDesc_find_files = "<leader>ff  Find files"
 let g:WhichKeyDesc_find_classes = "<leader>fc  Find classes"
 let g:WhichKeyDesc_find_recent = "<leader>fr  Recent files"
 let g:WhichKeyDesc_find_grep = "<leader>fg  Find in files"
-let g:WhichKeyDesc_symbols = "<leader>s  Find symbols"
+let g:WhichKeyDesc_find_symbols = "<leader>fs  Find symbols"
 let g:WhichKeyDesc_run = "<leader>r  Run"
 let g:WhichKeyDesc_run_selected = "<leader>rr  Run selected configuration"
 let g:WhichKeyDesc_run_search = "<leader>ra  Run Anything"
