@@ -21,6 +21,9 @@ Which-Key labels use Nerd Font glyphs alongside text. The rc sets the
 popup font to `JetBrainsMono Nerd Font`, which must be installed on a new Mac.
 The installed plugin does not show IntelliJ action icons directly.
 
+`Space s` opens PyCharm's Find Symbol search (classes, methods, fields, and other symbols).
+`Space fc` opens Find Class.
+
 ## Run and debug
 
 `Space rr` runs the selected configuration and `Space dd` starts it in the debugger.

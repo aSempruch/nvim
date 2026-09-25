@@ -8,8 +8,10 @@ set smartcase
 
 " Telescope-style file navigation using PyCharm actions.
 map <leader>ff <Action>(GotoFile)
+map <leader>fc <Action>(GotoClass)
 map <leader>fr <Action>(RecentFiles)
 map <leader>fg <Action>(FindInPath)
+map <leader>s <Action>(GotoSymbol)
 
 " Find references to the symbol under the cursor.
 nmap gr <Action>(FindUsages)
@@ -75,8 +77,10 @@ let g:WhichKeyDesc_windows_git = "<leader>wg  Version control"
 let g:WhichKeyDesc_windows_structure = "<leader>ws  Structure"
 let g:WhichKeyDesc_find = "<leader>f  Find"
 let g:WhichKeyDesc_find_files = "<leader>ff  Find files"
+let g:WhichKeyDesc_find_classes = "<leader>fc  Find classes"
 let g:WhichKeyDesc_find_recent = "<leader>fr  Recent files"
 let g:WhichKeyDesc_find_grep = "<leader>fg  Find in files"
+let g:WhichKeyDesc_symbols = "<leader>s  Find symbols"
 let g:WhichKeyDesc_run = "<leader>r  Run"
 let g:WhichKeyDesc_run_selected = "<leader>rr  Run selected configuration"
 let g:WhichKeyDesc_run_search = "<leader>ra  Run Anything"
