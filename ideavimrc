@@ -13,6 +13,9 @@ map <leader>fr <Action>(RecentFiles)
 map <leader>fg <Action>(FindInPath)
 map <leader>fs <Action>(GotoSymbol)
 
+" Toggle a bookmark on the current line.
+map <leader>b <Action>(ToggleBookmark)
+
 " Find references to the symbol under the cursor.
 nmap gr <Action>(FindUsages)
 
@@ -41,6 +44,7 @@ map <leader>wd <Action>(ActivateDebugToolWindow)
 map <leader>wt <Action>(ActivateTerminalToolWindow)
 map <leader>wg <Action>(ActivateVersionControlToolWindow)
 map <leader>ws <Action>(ActivateStructureToolWindow)
+map <leader>wb <Action>(ActivateBookmarksToolWindow)
 
 " Cycle editor file tabs, like Neovim's bufferline.
 nmap <S-h> <Action>(PreviousTab)
@@ -68,6 +72,7 @@ map <leader>dr <Action>(Resume)
 set which-key
 set notimeout
 let g:WhichKey_FontFamily = "JetBrainsMono Nerd Font"
+let g:WhichKeyDesc_bookmark = "<leader>b  Toggle bookmark"
 let g:WhichKeyDesc_windows = "<leader>w  Windows"
 let g:WhichKeyDesc_windows_files = "<leader>wf  Project files"
 let g:WhichKeyDesc_windows_run = "<leader>wr  Run window"
@@ -75,6 +80,7 @@ let g:WhichKeyDesc_windows_debug = "<leader>wd  Debug window"
 let g:WhichKeyDesc_windows_terminal = "<leader>wt  Terminal"
 let g:WhichKeyDesc_windows_git = "<leader>wg  Version control"
 let g:WhichKeyDesc_windows_structure = "<leader>ws  Structure"
+let g:WhichKeyDesc_windows_bookmarks = "<leader>wb  Bookmarks"
 let g:WhichKeyDesc_find = "<leader>f  Find"
 let g:WhichKeyDesc_find_files = "<leader>ff  Find files"
 let g:WhichKeyDesc_find_classes = "<leader>fc  Find classes"
