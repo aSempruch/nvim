@@ -39,9 +39,6 @@ nmap <S-l> <Action>(NextTab)
 sethandler <C-d> n:vim
 
 " Run the selected configuration, choose one, or search with Run Anything.
-" Clear the old Run Anything binding when re-sourcing this file in PyCharm.
-silent! nunmap <leader>R
-unlet! g:WhichKeyDesc_run_anything
 nmap <leader>rr <Action>(Run)
 nmap <leader>ra <Action>(RunAnything)
 nmap <leader>rs <Action>(ChooseRunConfiguration)

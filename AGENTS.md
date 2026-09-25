@@ -1,5 +1,12 @@
 # Working on this nvim config
 
+## No migration code
+
+Keep configuration files focused on the current desired state. Do not add
+migration, compatibility, or cleanup code for bindings and settings from older
+versions of this repository. In particular, do not add `unmap` or `unlet`
+commands to `ideavimrc` just to remove a former binding when Alan sources it.
+
 ## Prefer the nvim-community "meta" over what's closest to IntelliJ
 
 When recommending or adding plugins/workflows, default to whatever the nvim community
