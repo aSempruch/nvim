@@ -1,5 +1,5 @@
 " Shared navigation habits from ~/.config/nvim.
-" Leader actions are available in normal and visual modes.
+" Leader actions are available in normal, visual, select, and operator-pending modes.
 let mapleader = " "
 set relativenumber
 set scrolloff=10
@@ -7,12 +7,9 @@ set ignorecase
 set smartcase
 
 " Telescope-style file navigation using PyCharm actions.
-nmap <leader>ff <Action>(GotoFile)
-xmap <leader>ff <Action>(GotoFile)
-nmap <leader>fr <Action>(RecentFiles)
-xmap <leader>fr <Action>(RecentFiles)
-nmap <leader>fg <Action>(FindInPath)
-xmap <leader>fg <Action>(FindInPath)
+map <leader>ff <Action>(GotoFile)
+map <leader>fr <Action>(RecentFiles)
+map <leader>fg <Action>(FindInPath)
 
 " Find references to the symbol under the cursor.
 nmap gr <Action>(FindUsages)
@@ -36,18 +33,12 @@ nmap <C-k> <C-w>k
 nmap <C-l> <C-w>l
 
 " Focus PyCharm tool windows from the editor.
-nmap <leader>wf <Action>(ActivateProjectToolWindow)
-xmap <leader>wf <Action>(ActivateProjectToolWindow)
-nmap <leader>wr <Action>(ActivateRunToolWindow)
-xmap <leader>wr <Action>(ActivateRunToolWindow)
-nmap <leader>wd <Action>(ActivateDebugToolWindow)
-xmap <leader>wd <Action>(ActivateDebugToolWindow)
-nmap <leader>wt <Action>(ActivateTerminalToolWindow)
-xmap <leader>wt <Action>(ActivateTerminalToolWindow)
-nmap <leader>wg <Action>(ActivateVersionControlToolWindow)
-xmap <leader>wg <Action>(ActivateVersionControlToolWindow)
-nmap <leader>ws <Action>(ActivateStructureToolWindow)
-xmap <leader>ws <Action>(ActivateStructureToolWindow)
+map <leader>wf <Action>(ActivateProjectToolWindow)
+map <leader>wr <Action>(ActivateRunToolWindow)
+map <leader>wd <Action>(ActivateDebugToolWindow)
+map <leader>wt <Action>(ActivateTerminalToolWindow)
+map <leader>wg <Action>(ActivateVersionControlToolWindow)
+map <leader>ws <Action>(ActivateStructureToolWindow)
 
 " Cycle editor file tabs, like Neovim's bufferline.
 nmap <S-h> <Action>(PreviousTab)
@@ -57,30 +48,19 @@ nmap <S-l> <Action>(NextTab)
 sethandler <C-d> n:vim
 
 " Run the selected configuration, choose one, or search with Run Anything.
-nmap <leader>rr <Action>(Run)
-xmap <leader>rr <Action>(Run)
-nmap <leader>ra <Action>(RunAnything)
-xmap <leader>ra <Action>(RunAnything)
-nmap <leader>rs <Action>(ChooseRunConfiguration)
-xmap <leader>rs <Action>(ChooseRunConfiguration)
+map <leader>rr <Action>(Run)
+map <leader>ra <Action>(RunAnything)
+map <leader>rs <Action>(ChooseRunConfiguration)
 
 " Start or control a debug session.
-nmap <leader>dd <Action>(Debug)
-xmap <leader>dd <Action>(Debug)
-nmap <leader>db <Action>(ToggleLineBreakpoint)
-xmap <leader>db <Action>(ToggleLineBreakpoint)
-nmap <leader>de <Action>(EvaluateExpression)
-xmap <leader>de <Action>(EvaluateExpression)
-nmap <leader>dn <Action>(StepOver)
-xmap <leader>dn <Action>(StepOver)
-nmap <leader>di <Action>(StepInto)
-xmap <leader>di <Action>(StepInto)
-nmap <leader>do <Action>(StepOut)
-xmap <leader>do <Action>(StepOut)
-nmap <leader>dc <Action>(RunToCursor)
-xmap <leader>dc <Action>(RunToCursor)
-nmap <leader>dr <Action>(Resume)
-xmap <leader>dr <Action>(Resume)
+map <leader>dd <Action>(Debug)
+map <leader>db <Action>(ToggleLineBreakpoint)
+map <leader>de <Action>(EvaluateExpression)
+map <leader>dn <Action>(StepOver)
+map <leader>di <Action>(StepInto)
+map <leader>do <Action>(StepOut)
+map <leader>dc <Action>(RunToCursor)
+map <leader>dr <Action>(Resume)
 
 " Show available leader mappings after Space.
 set which-key
@@ -112,10 +92,8 @@ let g:WhichKeyDesc_debug_cursor = "<leader>dc  Run to cursor"
 let g:WhichKeyDesc_debug_resume = "<leader>dr  Resume to next breakpoint"
 
 " Git blame annotations and branch selection.
-nmap <leader>gb <Action>(Annotate)
-xmap <leader>gb <Action>(Annotate)
-nmap <leader>gB <Action>(Git.Branches)
-xmap <leader>gB <Action>(Git.Branches)
+map <leader>gb <Action>(Annotate)
+map <leader>gB <Action>(Git.Branches)
 let g:WhichKeyDesc_git = "<leader>g  Git"
 let g:WhichKeyDesc_git_blame = "<leader>gb  Git blame annotations"
 let g:WhichKeyDesc_git_branches = "<leader>gB  Git branches"
