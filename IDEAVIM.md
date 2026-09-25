@@ -26,6 +26,20 @@ The installed plugin does not show IntelliJ action icons directly.
 `Space fb` opens the bookmarks popup for quick navigation.
 `Space b` toggles a bookmark on the current line (press again to remove it).
 
+## Surround text
+
+IdeaVim's built-in surround extension uses the same add/delete/replace keys as
+Neovim's mini.surround setup. Flash keeps `s` and `S`.
+
+| Keys | Result |
+| --- | --- |
+| Select text, then `gsa)` | Surround with `(text)` |
+| Select text, then `gsa(` | Surround with `( text )` |
+| Select text, then `gsa"` | Surround with double quotes |
+| `gsaiw)` | Surround the current word with parentheses |
+| `gsd)` | Delete surrounding parentheses |
+| `gsr)"` | Replace surrounding parentheses with double quotes |
+
 ## Run and debug
 
 `Space rr` runs the selected configuration and `Space dd` starts it in the debugger.

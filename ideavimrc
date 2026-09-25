@@ -32,6 +32,14 @@ nmap S <Action>(flash.treesitter)
 xmap S <Action>(flash.treesitter)
 omap r <Action>(flash.remote)
 
+" Match mini.surround's g-prefixed bindings without taking Flash's s/S.
+let g:surround_no_mappings = 1
+set surround
+nmap gsa <Plug>YSurround
+xmap gsa <Plug>VSurround
+nmap gsd <Plug>DSurround
+nmap gsr <Plug>CSurround
+
 " Move between editor splits, as in Neovim.
 nmap <C-h> <C-w>h
 nmap <C-j> <C-w>j
