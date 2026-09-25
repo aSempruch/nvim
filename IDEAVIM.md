@@ -23,10 +23,10 @@ The installed plugin does not show IntelliJ action icons directly.
 ## Run and debug
 
 `Space rr` runs the selected configuration and `Space dd` starts it in the debugger.
-`Space ra` opens PyCharm's Run configuration chooser, which lists configurations
+`Space rs` opens PyCharm's Run configuration chooser, which lists configurations
 immediately. The top-right Run widget groups pinned configurations more clearly,
 but no editor-invokable action was verified to open that pinned presentation.
-`Space rs` opens Run Anything for typed searches.
+`Space ra` opens Run Anything for typed searches.
 
 During a debug session, `Space db` toggles a line breakpoint, `Space de`
 evaluates an expression, `Space dn` steps over, `Space di` steps into, and

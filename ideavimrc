@@ -43,8 +43,8 @@ sethandler <C-d> n:vim
 silent! nunmap <leader>R
 unlet! g:WhichKeyDesc_run_anything
 nmap <leader>rr <Action>(Run)
-nmap <leader>ra <Action>(ChooseRunConfiguration)
-nmap <leader>rs <Action>(RunAnything)
+nmap <leader>ra <Action>(RunAnything)
+nmap <leader>rs <Action>(ChooseRunConfiguration)
 
 " Start or control a debug session.
 nmap <leader>dd <Action>(Debug)
@@ -66,8 +66,8 @@ let g:WhichKeyDesc_find_recent = "<leader>fr  Recent files"
 let g:WhichKeyDesc_find_grep = "<leader>fg  Find in files"
 let g:WhichKeyDesc_run = "<leader>r  Run"
 let g:WhichKeyDesc_run_selected = "<leader>rr  Run selected configuration"
-let g:WhichKeyDesc_run_choose = "<leader>ra  Choose run configuration"
-let g:WhichKeyDesc_run_search = "<leader>rs  Run Anything"
+let g:WhichKeyDesc_run_search = "<leader>ra  Run Anything"
+let g:WhichKeyDesc_run_choose = "<leader>rs  Choose run configuration"
 let g:WhichKeyDesc_debug = "<leader>d  Debug"
 let g:WhichKeyDesc_debug_start = "<leader>dd  Debug selected configuration"
 let g:WhichKeyDesc_debug_breakpoint = "<leader>db  Toggle breakpoint"
