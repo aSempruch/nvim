@@ -31,6 +31,21 @@ evaluates an expression, `Space dn` steps over, `Space di` steps into, and
 `Space do` steps out. `Space dc` runs to the cursor, and `Space dr` resumes to
 the next breakpoint.
 
+## Tool windows
+
+From normal mode in the editor, use `Space w` followed by:
+
+| Key | Focus |
+| --- | --- |
+| `f` | Project files (Command-1) |
+| `r` | Run |
+| `d` | Debug |
+| `t` | Terminal |
+| `g` | Version control |
+| `s` | Structure |
+
+These activate PyCharm tool windows; they do not start a run or debug session.
+
 ## Editor splits
 
 To move the current file into a new right-hand split without changing `vs`,
