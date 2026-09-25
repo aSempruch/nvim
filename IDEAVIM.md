@@ -14,6 +14,8 @@ The script refuses to replace an existing `~/.ideavimrc`. Merge or back up that 
 After editing `ideavimrc`, run `:source ~/.ideavimrc` in PyCharm to reload it.
 The rc disables the key-sequence timeout, so an unfinished Space mapping waits
 for the next key or Escape.
+Reloading also clears the old `Space R` Run Anything binding and its Which-Key
+label if they remain from an earlier version of the rc.
 Which-Key labels use Nerd Font glyphs alongside text. The rc sets the
 popup font to `JetBrainsMono Nerd Font`, which must be installed on a new Mac.
 The installed plugin does not show IntelliJ action icons directly.
@@ -24,6 +26,7 @@ The installed plugin does not show IntelliJ action icons directly.
 `Space ra` opens PyCharm's Run configuration chooser, which lists configurations
 immediately. The top-right Run widget groups pinned configurations more clearly,
 but no editor-invokable action was verified to open that pinned presentation.
+`Space rs` opens Run Anything for typed searches.
 
 During a debug session, `Space db` toggles a line breakpoint, `Space de`
 evaluates an expression, `Space dn` steps over, `Space di` steps into, and
