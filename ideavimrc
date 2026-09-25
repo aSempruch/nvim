@@ -12,6 +12,7 @@ map <leader>fc <Action>(GotoClass)
 map <leader>fr <Action>(RecentFiles)
 map <leader>fg <Action>(FindInPath)
 map <leader>fs <Action>(GotoSymbol)
+map <leader>fb <Action>(ShowBookmarks)
 
 " Toggle a bookmark on the current line.
 map <leader>b <Action>(ToggleBookmark)
@@ -87,6 +88,7 @@ let g:WhichKeyDesc_find_classes = "<leader>fc  Find classes"
 let g:WhichKeyDesc_find_recent = "<leader>fr  Recent files"
 let g:WhichKeyDesc_find_grep = "<leader>fg  Find in files"
 let g:WhichKeyDesc_find_symbols = "<leader>fs  Find symbols"
+let g:WhichKeyDesc_find_bookmarks = "<leader>fb  Find bookmarks"
 let g:WhichKeyDesc_run = "<leader>r  Run"
 let g:WhichKeyDesc_run_selected = "<leader>rr  Run selected configuration"
 let g:WhichKeyDesc_run_search = "<leader>ra  Run Anything"

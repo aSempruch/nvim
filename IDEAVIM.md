@@ -23,6 +23,7 @@ The installed plugin does not show IntelliJ action icons directly.
 
 `Space fs` opens PyCharm's Find Symbol search (classes, methods, fields, and other symbols).
 `Space fc` opens Find Class.
+`Space fb` opens the bookmarks popup for quick navigation.
 `Space b` toggles a bookmark on the current line (press again to remove it).
 
 ## Run and debug
