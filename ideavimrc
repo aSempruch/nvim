@@ -29,14 +29,14 @@ xmap f <Action>(flash.find)
 nmap F <Action>(flash.find_backward)
 xmap F <Action>(flash.find_backward)
 nmap S <Action>(flash.treesitter)
-xmap S <Action>(flash.treesitter)
 omap r <Action>(flash.remote)
 
-" Match mini.surround's g-prefixed bindings without taking Flash's s/S.
+" Match mini.surround: visual S surrounds; normal s/S remain Flash.
 let g:surround_no_mappings = 1
 set surround
 nmap gsa <Plug>YSurround
 xmap gsa <Plug>VSurround
+xmap S <Plug>VSurround
 nmap gsd <Plug>DSurround
 nmap gsr <Plug>CSurround
 

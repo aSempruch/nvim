@@ -7,7 +7,7 @@ return {
     opts = {},
     keys = {
       { 's', mode = { 'n', 'x', 'o' }, function() require('flash').jump() end, desc = 'Flash jump' },
-      { 'S', mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end, desc = 'Flash treesitter node' },
+      { 'S', mode = { 'n', 'o' }, function() require('flash').treesitter() end, desc = 'Flash treesitter node' },
       { 'r', mode = 'o', function() require('flash').remote() end, desc = 'Remote flash' },
       { 'R', mode = { 'o', 'x' }, function() require('flash').treesitter_search() end, desc = 'Treesitter search' },
       { '<c-s>', mode = 'c', function() require('flash').toggle() end, desc = 'Toggle flash search' },
@@ -54,6 +54,7 @@ return {
           update_n_lines = 'gsn',
         },
       }
+      vim.keymap.set('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true, desc = 'Surround selection' })
     end,
   },
 

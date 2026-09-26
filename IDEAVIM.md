@@ -29,16 +29,19 @@ The installed plugin does not show IntelliJ action icons directly.
 ## Surround text
 
 IdeaVim's built-in surround extension uses the same add/delete/replace keys as
-Neovim's mini.surround setup. Flash keeps `s` and `S`.
+Neovim's mini.surround setup. Visual-mode `S` surrounds the selection in both
+editors. Flash keeps normal-mode `s`/`S` and visual-mode `s`.
 
 | Keys | Result |
 | --- | --- |
-| Select text, then `gsa)` | Surround with `(text)` |
-| Select text, then `gsa(` | Surround with `( text )` |
-| Select text, then `gsa"` | Surround with double quotes |
+| Select text, then `S)` | Surround with `(text)` |
+| Select text, then `S(` | Surround with `( text )` |
+| Select text, then `S"` | Surround with double quotes |
 | `gsaiw)` | Surround the current word with parentheses |
 | `gsd)` | Delete surrounding parentheses |
 | `gsr)"` | Replace surrounding parentheses with double quotes |
+
+Visual-mode `gsa` also remains available.
 
 ## Run and debug
 
