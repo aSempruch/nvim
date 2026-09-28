@@ -35,13 +35,16 @@ editors. Flash keeps normal-mode `s`/`S` and visual-mode `s`.
 | Keys | Result |
 | --- | --- |
 | Select text, then `S)` | Surround with `(text)` |
-| Select text, then `S(` | Surround with `( text )` |
+| Select text, then `S(` | Surround with `(text)` in IdeaVim |
+| Select text, then `S[` or `S{` | Surround with `[text]` or `{text}` in IdeaVim |
 | Select text, then `S"` | Surround with double quotes |
 | `gsaiw)` | Surround the current word with parentheses |
 | `gsd)` | Delete surrounding parentheses |
 | `gsr)"` | Replace surrounding parentheses with double quotes |
 
 Visual-mode `gsa` also remains available.
+IdeaVim's visual `S` opening-bracket mappings use the unpadded closing-bracket
+surrounds. Neovim and IdeaVim's `gsa` retain their existing surround defaults.
 
 ## Run and debug
 

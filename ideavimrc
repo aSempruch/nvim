@@ -41,6 +41,10 @@ set surround
 nmap gsa <Plug>YSurround
 xmap gsa <Plug>VSurround
 xmap S <Plug>VSurround
+" Opening brackets wrap tightly, just like closing brackets.
+xmap S( <Plug>VSurround)
+xmap S[ <Plug>VSurround]
+xmap S{ <Plug>VSurround}
 nmap gsd <Plug>DSurround
 nmap gsr <Plug>CSurround
 
