@@ -6,6 +6,10 @@ set scrolloff=10
 set ignorecase
 set smartcase
 
+" Keep IdeaVim out of the Git Changes commit message box. IdeaVim treats that
+" editor as a dialog, so this also disables it in other dialog editors.
+set ideavimsupport-=dialog
+
 " Telescope-style file navigation using PyCharm actions.
 map <leader>ff <Action>(GotoFile)
 map <leader>fc <Action>(GotoClass)
