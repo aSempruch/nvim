@@ -6,9 +6,8 @@ set scrolloff=10
 set ignorecase
 set smartcase
 
-" Keep IdeaVim out of the Git Changes commit message box. IdeaVim treats that
-" editor as a dialog, so this also disables it in other dialog editors.
-set ideavimsupport-=dialog
+" Toggle IdeaVim on and off, e.g. for the Git Changes commit message box.
+map <leader>vt <Action>(VimPluginToggle)
 
 " Telescope-style file navigation using PyCharm actions.
 map <leader>ff <Action>(GotoFile)
@@ -62,6 +61,7 @@ map <leader>wt <Action>(ActivateTerminalToolWindow)
 map <leader>wg <Action>(ActivateVersionControlToolWindow)
 map <leader>ws <Action>(ActivateStructureToolWindow)
 map <leader>wb <Action>(ActivateBookmarksToolWindow)
+map <leader>wm <Action>(HideAllWindows)
 
 " Cycle editor file tabs, like Neovim's bufferline.
 nmap <S-h> <Action>(PreviousTab)
@@ -90,6 +90,7 @@ set which-key
 set notimeout
 let g:WhichKey_FontFamily = "JetBrainsMono Nerd Font"
 let g:WhichKeyDesc_bookmark = "<leader>b  Toggle bookmark"
+let g:WhichKeyDesc_vim_toggle = "<leader>vt  Toggle IdeaVim"
 let g:WhichKeyDesc_windows = "<leader>w  Windows"
 let g:WhichKeyDesc_windows_files = "<leader>wf  Project files"
 let g:WhichKeyDesc_windows_run = "<leader>wr  Run window"
@@ -98,6 +99,7 @@ let g:WhichKeyDesc_windows_terminal = "<leader>wt  Terminal"
 let g:WhichKeyDesc_windows_git = "<leader>wg  Version control"
 let g:WhichKeyDesc_windows_structure = "<leader>ws  Structure"
 let g:WhichKeyDesc_windows_bookmarks = "<leader>wb  Bookmarks"
+let g:WhichKeyDesc_windows_maximize = "<leader>wm  Toggle hide all tool windows"
 let g:WhichKeyDesc_find = "<leader>f  Find"
 let g:WhichKeyDesc_find_files = "<leader>ff  Find files"
 let g:WhichKeyDesc_find_classes = "<leader>fc  Find classes"
@@ -125,3 +127,12 @@ map <leader>gB <Action>(Git.Branches)
 let g:WhichKeyDesc_git = "<leader>g  Git"
 let g:WhichKeyDesc_git_blame = "<leader>gb  Git blame annotations"
 let g:WhichKeyDesc_git_branches = "<leader>gB  Git branches"
+
+" Diff viewer navigation: ]c / [c move between changes, ]q / [q between files,
+" ; / , between changes.
+nmap ]c <Action>(NextDiff)
+nmap [c <Action>(PreviousDiff)
+nmap ]q <Action>(Diff.NextChange)
+nmap [q <Action>(Diff.PrevChange)
+nmap ; <Action>(NextDiff)
+nmap , <Action>(PreviousDiff)
