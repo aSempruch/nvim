@@ -25,6 +25,7 @@ The installed plugin does not show IntelliJ action icons directly.
 `Space fc` opens Find Class.
 `Space fb` opens the bookmarks popup for quick navigation.
 `Space b` toggles a bookmark on the current line (press again to remove it).
+`Space vt` toggles IdeaVim on and off. The toggle is global, not per editor.
 
 ## Surround text
 
@@ -75,8 +76,18 @@ From normal or visual mode in the editor, use `Space w` followed by:
 
 These activate PyCharm tool windows; they do not start a run or debug session.
 
+`Space w m` toggles Hide All Windows: it collapses every tool window so only the
+editor remains, and a second press restores the previous layout.
+
 ## Editor splits
 
 To move the current file into a new right-hand split without changing `vs`,
 use **Find Action** (`Shift+Command+A`) and choose **Split and Move Right**.
 The corresponding IdeaVim command is `:action MoveTabRight`.
+
+## Diff viewer
+
+In a diff, `]c` and `[c` jump to the next and previous change, and `]q` and
+`[q` move to the next and previous file. `;` and `,` also jump to the next and
+previous change, so they no longer repeat `t`/`T`. `Tab` is not mapped because
+IdeaVim cannot tell it apart from `Ctrl-I` (jump list forward).
