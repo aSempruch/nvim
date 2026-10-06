@@ -328,7 +328,31 @@ return {
 				local repo_name = vim.fn.fnamemodify(repo_root, ':t')
 				local worktree_path = string.format('%s/%s-pr-%d', worktree_root, repo_name, pr_number)
 
+				-- Native progress message: shown in the message line under the
+				-- statusline and as the terminal's progress indicator, since the
+				-- clone and checkout otherwise run silently in the background.
+				-- Safe to call from vim.system callbacks.
+				local progress_opts = {
+					kind = 'progress',
+					id = 'config.octo.pr_worktree',
+					source = 'octo',
+					title = string.format('PR #%d', pr_number),
+				}
+				local function progress(msg, percent, status)
+					vim.schedule(function()
+						vim.api.nvim_echo({ { msg } }, status ~= 'running',
+							vim.tbl_extend('force', progress_opts, { percent = percent, status = status }))
+					end)
+				end
+				local function fail(step, stderr)
+					progress(step .. ' failed', 100, 'failed')
+					vim.schedule(function()
+						vim.notify(step .. ' failed:\n' .. stderr, vim.log.levels.ERROR)
+					end)
+				end
+
 				local function start_review_in_worktree()
+					progress('Starting review...', 90, 'running')
 					vim.schedule(function()
 						-- `Octo review` (no subcommand) starts a fresh review or
 						-- resumes a pending one for the viewer, and either way
@@ -336,8 +360,16 @@ return {
 						-- inheriting whatever directory is current when it
 						-- fires -- so `tcd` here rather than pre-opening a tab
 						-- ourselves, which just leaves a blank one behind it.
-						vim.cmd('tcd ' .. vim.fn.fnameescape(worktree_path))
-						vim.cmd 'Octo review'
+						local ok, err = pcall(function()
+							vim.cmd('tcd ' .. vim.fn.fnameescape(worktree_path))
+							vim.cmd 'Octo review'
+						end)
+						if not ok then
+							fail('Octo review', tostring(err))
+							return
+						end
+						-- Octo loads the review data itself from here.
+						progress('Checked out into ' .. worktree_path, 100, 'success')
 					end)
 				end
 
@@ -347,12 +379,11 @@ return {
 				-- branch via a fetch-style ref update rather than a plain
 				-- `git checkout`, so this is safe even when already on it.
 				local function checkout_in_clone()
+					progress('Checking out PR branch...', 60, 'running')
 					vim.system({ 'gh', 'pr', 'checkout', tostring(pr_number) }, { cwd = worktree_path },
 						function(result)
 							if result.code ~= 0 then
-								vim.schedule(function()
-									vim.notify('gh pr checkout failed:\n' .. result.stderr, vim.log.levels.ERROR)
-								end)
+								fail('gh pr checkout', result.stderr)
 								return
 							end
 							start_review_in_worktree()
@@ -364,22 +395,18 @@ return {
 					return
 				end
 
+				progress('Cloning into ' .. worktree_path .. '...', 10, 'running')
 				vim.fn.mkdir(worktree_root, 'p')
 				vim.system({ 'git', 'remote', 'get-url', 'origin' }, { cwd = repo_root }, function(remote_result)
 					if remote_result.code ~= 0 then
-						vim.schedule(function()
-							vim.notify('git remote get-url origin failed:\n' .. remote_result.stderr,
-								vim.log.levels.ERROR)
-						end)
+						fail('git remote get-url origin', remote_result.stderr)
 						return
 					end
 					local origin_url = vim.trim(remote_result.stdout or '')
 
 					vim.system({ 'git', 'clone', repo_root, worktree_path }, {}, function(clone_result)
 						if clone_result.code ~= 0 then
-							vim.schedule(function()
-								vim.notify('git clone failed:\n' .. clone_result.stderr, vim.log.levels.ERROR)
-							end)
+							fail('git clone', clone_result.stderr)
 							return
 						end
 
@@ -389,10 +416,7 @@ return {
 						vim.system({ 'git', 'remote', 'set-url', 'origin', origin_url }, { cwd = worktree_path },
 							function(set_url_result)
 								if set_url_result.code ~= 0 then
-									vim.schedule(function()
-										vim.notify('git remote set-url failed:\n' .. set_url_result.stderr,
-											vim.log.levels.ERROR)
-									end)
+									fail('git remote set-url', set_url_result.stderr)
 									return
 								end
 								checkout_in_clone()
