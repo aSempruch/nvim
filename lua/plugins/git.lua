@@ -172,6 +172,12 @@ return {
 						-- up any other custom mapping callback.
 						next_hunk = { lhs = ']c', desc = 'move to next hunk (or next file)' },
 						prev_hunk = { lhs = '[c', desc = 'move to previous hunk (or previous file)' },
+						select_next_entry_quiet = { lhs = '<Tab>', desc = 'move to next changed file' },
+						select_prev_entry_quiet = { lhs = '<S-Tab>', desc = 'move to previous changed file' },
+					},
+					file_panel = {
+						select_next_entry_quiet = { lhs = '<Tab>', desc = 'move to next changed file' },
+						select_prev_entry_quiet = { lhs = '<S-Tab>', desc = 'move to previous changed file' },
 					},
 				},
 			}
@@ -182,6 +188,10 @@ return {
 			-- next/prev-file and next/prev-comment entries there for repeatable
 			-- versions so `;`/`,` work in PR reviews too (see config/repeatable.lua).
 			local octo_maps = require 'octo.mappings'
+			-- <Tab>/<S-Tab> step through files without becoming the `;`/`,`
+			-- target, so a later `;` still repeats whatever move came before.
+			octo_maps.select_next_entry_quiet = require('config.repeatable').preserve_last_move(octo_maps.select_next_entry)
+			octo_maps.select_prev_entry_quiet = require('config.repeatable').preserve_last_move(octo_maps.select_prev_entry)
 			octo_maps.select_next_entry, octo_maps.select_prev_entry =
 				require('config.repeatable').pair(octo_maps.select_next_entry, octo_maps.select_prev_entry)
 			octo_maps.next_comment, octo_maps.prev_comment =
@@ -399,10 +409,11 @@ return {
 				end,
 			})
 
-			-- Keep both diff windows alive so Octo's diff filler, scrollbind, and
-			-- review comments still work while one side gets most of the width.
-			-- A one-column inactive side caused redraw problems; two columns
-			-- avoid that in the PR review while giving code nearly full width.
+			-- Reviews open with Octo's normal even split; <leader>d gives one side
+			-- most of the width and then flips between new and old. Keep both diff
+			-- windows alive so Octo's diff filler, scrollbind, and review comments
+			-- still work. A one-column inactive side caused redraw problems; two
+			-- columns avoid that while giving code nearly full width.
 			local wide_diff_enabled = vim.g.config_octo_wide_diff_enabled ~= false
 			local function widen_review_side(layout, target)
 				local left, right = layout.left_winid, layout.right_winid
@@ -422,7 +433,6 @@ return {
 				-- Clear cells left behind by the large split resize before Octo's
 				-- extmarks and diff filler are drawn at their new positions.
 				vim.cmd 'redraw!'
-				layout._config_wide_diff_initialized = true
 			end
 
 			local function flip_review_diff()
@@ -439,24 +449,9 @@ return {
 
 			vim.api.nvim_create_autocmd('BufWinEnter', {
 				callback = function(args)
-					if vim.b[args.buf].octo_diff_props then
-						if wide_diff_enabled then
-							vim.keymap.set('n', '<leader>d', flip_review_diff,
-								{ buffer = args.buf, desc = 'Flip wide Octo diff (new/old)' })
-						end
-						-- Octo builds the diff buffers before marking its layout ready.
-						-- Apply the default after that setup, once per review layout.
-						local tab = vim.api.nvim_get_current_tabpage()
-						vim.schedule(function()
-							if not vim.api.nvim_tabpage_is_valid(tab) or
-								vim.api.nvim_get_current_tabpage() ~= tab then return end
-							local review = require('octo.reviews').get_current_review()
-							local layout = review and review.layout
-							if wide_diff_enabled and layout and layout.ready and
-								not layout._config_wide_diff_initialized then
-								widen_review_side(layout, layout.right_winid)
-							end
-						end)
+					if wide_diff_enabled and vim.b[args.buf].octo_diff_props then
+						vim.keymap.set('n', '<leader>d', flip_review_diff,
+							{ buffer = args.buf, desc = 'Flip wide Octo diff (new/old)' })
 					end
 				end,
 			})
