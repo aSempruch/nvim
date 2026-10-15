@@ -17,6 +17,30 @@ return {
   {
     'mason-org/mason.nvim',
     opts = {},
+    config = function(_, opts)
+      require('mason').setup(opts)
+
+      -- TEMPORARY: mason-registry's kotlin-lsp recipe downloads unsigned
+      -- download-cdn.jetbrains.com URLs, which now 404 for every release;
+      -- download.jetbrains.com redirects to signed CDN URLs. Delete this
+      -- block (and tests/kotlin_lsp_download.lua) once
+      -- https://github.com/mason-org/mason-registry/issues/17366 is fixed --
+      -- the rewrite is a no-op by then. Reapplied on every registry refresh
+      -- because a refresh replaces the package spec.
+      if require('config.features').kotlin_lsp then
+        local registry = require 'mason-registry'
+        local function use_official_kotlin_lsp_host()
+          if not registry.has_package 'kotlin-lsp' then return end
+          for _, target in ipairs(registry.get_package('kotlin-lsp').spec.source.download) do
+            for name, url in pairs(target.files) do
+              target.files[name] = url:gsub('//download%-cdn%.jetbrains%.com/', '//download.jetbrains.com/')
+            end
+          end
+        end
+        use_official_kotlin_lsp_host()
+        registry:on('update:success', use_official_kotlin_lsp_host)
+      end
+    end,
   },
 
   {
