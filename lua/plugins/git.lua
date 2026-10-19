@@ -214,6 +214,26 @@ return {
 			octo_maps.next_comment, octo_maps.prev_comment =
 				require('config.repeatable').pair(octo_maps.next_comment, octo_maps.prev_comment)
 
+			-- Marking a file viewed (<localleader><space>) also moves on to the
+			-- file after it, the way GitHub collapses a viewed file. Unmarking
+			-- stays put, and the last file has nowhere to go.
+			local octo_toggle_viewed = octo_maps.toggle_viewed
+			octo_maps.toggle_viewed = function()
+				local layout = require('octo.reviews').get_current_layout()
+				local file = layout and layout.file_panel:get_file_at_cursor()
+				local marking = file and file.viewed_state ~= 'VIEWED'
+				octo_toggle_viewed()
+				if not marking then
+					return
+				end
+				for i, f in ipairs(layout.files) do
+					if f == file and layout.files[i + 1] then
+						layout:set_current_file(layout.files[i + 1])
+						return
+					end
+				end
+			end
+
 			-- Octo's own `gf` in a review diff always does `:edit` in the diff
 			-- pane itself. Wrap it to open in a new tab instead, leaving the
 			-- diff/review layout intact behind it -- but only inside a diff;
