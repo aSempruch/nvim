@@ -223,6 +223,13 @@ stopping at the last/first file rather than wrapping, `]Q`/`[Q` first/last,
 viewed). `<localleader>e` (`<space>e`) jumps focus into the file panel
 instead if you'd rather browse visually.
 
+`<localleader><space>` (`<space><space>`) toggles the current file's
+GitHub "Viewed" checkbox, from the diff pane or the file panel. The file
+panel's status line always shows progress, e.g. `viewed: main 3/12 · test
+1/5` and `file 7/17`; anything under a `src/*test*/` source set (src/test,
+src/testFixtures, src/integrationTest) counts as test, everything else as
+main.
+
 **Same thing, but without touching this repo's checkout:**
 
 `<leader>gw` from inside an Octo PR buffer (`<CR>` on a PR in `<leader>gi`'s

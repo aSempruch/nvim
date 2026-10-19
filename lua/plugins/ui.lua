@@ -46,6 +46,7 @@ return {
     event = 'VeryLazy',
     opts = {
       options = { theme = 'auto', icons_enabled = vim.g.have_nerd_font },
+      extensions = { require('config.octo_review_progress').extension },
     },
   },
 
