@@ -217,7 +217,8 @@ Both diff windows remain open for alignment and review comments; `<C-w>=`
 restores equal widths when you want the side-by-side view again.
 
 No pane-switching needed to move between files -- from the diff pane
-itself: `]q`/`[q` next/previous changed file, `]Q`/`[Q` first/last,
+itself: `]q`/`[q` (or `<Tab>`/`<S-Tab>`) next/previous changed file,
+stopping at the last/first file rather than wrapping, `]Q`/`[Q` first/last,
 `]u`/`[u` next/previous *unviewed* file (skips ones already marked
 viewed). `<localleader>e` (`<space>e`) jumps focus into the file panel
 instead if you'd rather browse visually.

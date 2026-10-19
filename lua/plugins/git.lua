@@ -188,6 +188,23 @@ return {
 			-- next/prev-file and next/prev-comment entries there for repeatable
 			-- versions so `;`/`,` work in PR reviews too (see config/repeatable.lua).
 			local octo_maps = require 'octo.mappings'
+			-- Octo's next/prev file wraps from the last file back to the first
+			-- (and vice versa). Stop at either end instead, so <Tab>, ]q and
+			-- ]c's file fall-through are no-ops on the last/first file.
+			local function select_adjacent_entry(step)
+				return function()
+					local layout = require('octo.reviews').get_current_layout()
+					if not (layout and layout.file_panel:is_open()) then
+						return
+					end
+					local file = layout.files[layout.selected_file_idx + step]
+					if file then
+						layout:set_current_file(file)
+					end
+				end
+			end
+			octo_maps.select_next_entry = select_adjacent_entry(1)
+			octo_maps.select_prev_entry = select_adjacent_entry(-1)
 			-- <Tab>/<S-Tab> step through files without becoming the `;`/`,`
 			-- target, so a later `;` still repeats whatever move came before.
 			octo_maps.select_next_entry_quiet = require('config.repeatable').preserve_last_move(octo_maps.select_next_entry)
