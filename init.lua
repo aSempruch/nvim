@@ -7,6 +7,8 @@ vim.g.maplocalleader = ' '
 -- Flip this off if your terminal font isn't a Nerd Font (see README.md).
 vim.g.have_nerd_font = true
 
+vim.opt.backupcopy = "yes"
+
 require('config.options')
 require('config.keymaps')
 require('config.autocmds')
